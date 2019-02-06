@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
         crossorigin="anonymous">
 
@@ -15,7 +16,8 @@
 <body>
     <div class="container-fluid">
 
-        <button type="button" data-toggle="modal" data-target="#ModalAggiungi">Aggiungi persona</button>
+        <button type="button" class="btnAggiungi" data-toggle="modal" data-target="#ModalAggiungi"><img class="PlusIcon"
+                src="img/plus.png"></button>
 
         <div class="modal fade" id="ModalAggiungi" role="dialog">
             <div class="modal-dialog">
@@ -61,7 +63,7 @@
         </div>
 
 
-        <table class="table">
+        <table class="table table-sm">
             <thead class="tableHeader">
                 <tr>
                     <th scope="col">Nome</th>
@@ -69,7 +71,7 @@
                     <th scope="col">Data Nascita</th>
                     <th scope="col">Reddito</th>
                     <th scope="col">Sesso</th>
-                    <th scope="col">Altro</th>
+                    <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
@@ -80,12 +82,13 @@
                     <td>10.000</td>
                     <td>Maschio</td>
                     <td class="text-right dropdown">
-                        <img class="VerticalOptions" src="img/VerticalOptions.png" data-toggle="dropdown">
-
-                        <ul class="dropdown-menu">
-                            <li><a data-toggle="modal" data-target="#ModalAggiungi">Modifica</a></li>
-                            <li><a data-toggle="modal" data-target="#ModalElimina">Elimina</a></li>
-                        </ul>
+                        <div class="dropdown">
+                            <img class="VerticalOptions dropdown-toggle" src="img/VerticalOptions.png" data-toggle="dropdown">
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="dropdown-item" data-toggle="modal" data-target="#ModalAggiungi">Modifica</a>
+                                <a class="dropdown-item" data-toggle="modal" data-target="#ModalElimina">Elimina</a>
+                            </div>
+                        </div>
                     </td>
                 </tr>
             </tbody>

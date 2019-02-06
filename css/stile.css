@@ -1,3 +1,7 @@
+body{
+    height: 500px;
+}
+
 .VerticalOptions{
     width: 20px;
     height: 20px;
@@ -5,6 +9,34 @@
 
 .dropdown-menu{
     padding: 10px;
-    width: 30px;
 }
 
+.container-fluid{
+    width: 100%;
+}
+
+.btnAggiungi{
+    position: fixed;
+    bottom: 37px;
+    right: 37px;
+    text-align: center;
+    background-color: #5EF05E;
+    height: 65px;
+    width: 67px;
+    border: none;
+    border-radius: 70px;
+    box-shadow: none;
+}
+
+.btnAggiungi:focus{
+    outline: none
+}
+
+.btnAggiungi:hover{
+    background-color: #58E058;
+}
+
+.PlusIcon{
+    width: 25px;
+    height: 25px;
+}
