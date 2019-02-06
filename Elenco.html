@@ -31,11 +31,11 @@
                     <div class="modal-body">
                         <form class="row">
                             <label class="col-sm-6">Nome:</label>
-                            <input class="col-sm-6" type="text">
+                            <input class="col-sm-6 form-control" type="text">
                             <label class="col-sm-6">Cognome:</label>
-                            <input class="col-sm-6" type="text">
+                            <input class="col-sm-6 form-control" type="text">
                             <label class="col-sm-6">Data di nascita:</label>
-                            <input class="col-sm.6" type="date">
+                            <input class="col-sm.6 form-control" type="date">
                             <label class="col-sm-6">Reddito:</label>
                             <div class="col-sm-6 row">
                                 <div class="input-group-prepend">
@@ -48,67 +48,79 @@
                                 </select>
                             </div>
                             <label class="col-sm-6">Sesso:</label>
-                            <div class="col-sm-6">
-                                <input class="col-sm-6" type="radio">Maschio
-                                <input class="col-sm-6" type="radio">Femmina
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1"
+                                    value="option1" checked>
+                                <label class="form-check-label" for="exampleRadios1">
+                                    Maschio
+                                </label>
                             </div>
-                        </form>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2"
+                                    value="option2">
+                                <label class="form-check-label" for="exampleRadios2">
+                                    Femmina
+                                </label>
+                            </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Salva</button>
-                    </div>
+
+                    </form>
                 </div>
-
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Salva</button>
+                </div>
             </div>
+
         </div>
+    </div>
 
 
-        <table class="table table-sm">
-            <thead class="tableHeader">
-                <tr>
-                    <th scope="col">Nome</th>
-                    <th scope="col">Cognome</th>
-                    <th scope="col">Data Nascita</th>
-                    <th scope="col">Reddito</th>
-                    <th scope="col">Sesso</th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Mario</td>
-                    <td>Rossi</td>
-                    <td>1.1.2018</td>
-                    <td>10.000</td>
-                    <td>Maschio</td>
-                    <td class="text-right dropdown">
-                        <div class="dropdown">
-                            <img class="VerticalOptions dropdown-toggle" src="img/VerticalOptions.png" data-toggle="dropdown">
-                            <div class="dropdown-menu dropdown-menu-right">
-                                <a class="dropdown-item" data-toggle="modal" data-target="#ModalAggiungi">Modifica</a>
-                                <a class="dropdown-item" data-toggle="modal" data-target="#ModalElimina">Elimina</a>
-                            </div>
+    <table class="table table-sm table-striped">
+        <thead class="tableHeader">
+            <tr>
+                <th scope="col">Nome</th>
+                <th scope="col">Cognome</th>
+                <th scope="col">Data Nascita</th>
+                <th scope="col">Reddito</th>
+                <th scope="col">Sesso</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Mario</td>
+                <td>Rossi</td>
+                <td>1.1.2018</td>
+                <td>10.000</td>
+                <td>Maschio</td>
+                <td class="text-right dropdown">
+                    <div class="dropdown">
+                        <img class="VerticalOptions dropdown-toggle" src="img/VerticalOptions.png" data-toggle="dropdown">
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item" data-toggle="modal" data-target="#ModalAggiungi">Modifica</a>
+                            <a class="dropdown-item" data-toggle="modal" data-target="#ModalElimina">Elimina</a>
                         </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
-        <div class="modal fade" id="ModalElimina" role="dialog">
-            <div class="modal-dialog">
-                <!-- Modal -->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4>Sei sicuro di voler eliminare?</h4>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">SI</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">NO</button>
-                    </div>
+    <div class="modal fade" id="ModalElimina" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Sei sicuro di voler eliminare?</h4>
                 </div>
-
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">SI</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">NO</button>
+                </div>
             </div>
+
         </div>
+    </div>
 
 
 

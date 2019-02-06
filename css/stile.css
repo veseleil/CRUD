@@ -40,3 +40,8 @@ body{
     width: 25px;
     height: 25px;
 }
+
+.form-check{
+    padding: 10px;
+    margin: 10px;
+}
