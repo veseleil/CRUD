@@ -60,6 +60,8 @@ function aggiungiPersona() {
     var data = $("#dataAgg").val();
     var reddito = $("#redditoAgg").val();
     var sesso = $("#sessoAgg").val();
+    $("#lblNomeAgg").val("Nome");
+    $("#lblCognomeAgg").val("Cognome");
 
     var redditoToAdd = 0;
     switch (reddito) {
@@ -87,6 +89,8 @@ function aggiungiPersona() {
 }
 
 function modificaPersona() {
+    $("#lblNomeAgg").val("");
+    $("#lblCognomeAgg").val("");
     var nome = $("#nomeAgg").val();
     var cognome = $("#cognomeAgg").val();
     var data = $("#dataAgg").val();
