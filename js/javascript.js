@@ -17,6 +17,24 @@ class Persona {
     }
 }
 
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.getElementsByClassName('needs-validation');
+      // Loop over them and prevent submission
+      var validation = Array.prototype.filter.call(forms, function(form) {
+        form.addEventListener('submit', function(event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+    }, false);
+  })();
+
 var persone = [];
 var ordinaNomeType = "az";
 var ordinaCognomeType = "az";
@@ -65,15 +83,15 @@ function aggiungiPersona() {
 
     var redditoToAdd = 0;
     switch (reddito) {
-        case "meno di 10.000":
+        case "meno di 10.000 $":
             redditoToAdd = 0;
             break;
 
-        case "da 10.000 a 20.000":
+        case "da 10.000 a 20.000 $":
             redditoToAdd = 1;
             break;
 
-        case "più di 20.000":
+        case "più di 20.000 $":
             redditoToAdd = 2;
             break;
     }
@@ -98,15 +116,15 @@ function modificaPersona() {
 
      var redditoToAdd = 0;
     switch (reddito) {
-        case "meno di 10.000":
+        case "meno di 10.000 $":
             redditoToAdd = 0;
             break;
 
-        case "da 10.000 a 20.000":
+        case "da 10.000 a 20.000 $":
             redditoToAdd = 1;
             break;
 
-        case "più di 20.000":
+        case "più di 20.000 $":
             redditoToAdd = 2;
             break;
     }
@@ -143,15 +161,15 @@ function showAll(type) {
             var redditoToShow = 0;
             switch (persone[e].reddito) {
                 case 0:
-                    redditoToShow = "meno di 10.000";
+                    redditoToShow = "meno di 10.000 $";
                     break;
 
                 case 1:
-                    redditoToShow = "da 10.000 a 20.000";
+                    redditoToShow = "da 10.000 a 20.000 $";
                     break;
 
                 case 2:
-                    redditoToShow = "più di 20.000";
+                    redditoToShow = "più di 20.000 $";
                     break;
             }
 
@@ -166,15 +184,15 @@ function showAll(type) {
             var redditoToShow = 0;
             switch (persone[e].reddito) {
                 case 0:
-                    redditoToShow = "meno di 10.000";
+                    redditoToShow = "meno di 10.000 $";
                     break;
 
                 case 1:
-                    redditoToShow = "da 10.000 a 20.000";
+                    redditoToShow = "da 10.000 a 20.000 $";
                     break;
 
                 case 2:
-                    redditoToShow = "più di 20.000";
+                    redditoToShow = "più di 20.000 $";
                     break;
             }
 

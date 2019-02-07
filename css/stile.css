@@ -2,6 +2,10 @@ body{
     height: 500px;
 }
 
+th:hover, a:hover {
+    cursor: pointer;
+}
+
 .VerticalOptions{
     width: 20px;
     height: 20px;
