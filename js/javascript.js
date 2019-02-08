@@ -167,7 +167,7 @@ function reset(what) {
     $("#redditoAgg").val("basso");
 
     if (what == "aggiungi") {
-        $("#labelDialog").text("Aggiungi persona");
+        $(".labelDialog").text("Aggiungi persona");
     } else if (what == "cerca") {
         $("#nomeCerca").prop('readonly', true);
         $("#nomeCerca").val("");
@@ -185,7 +185,7 @@ function reset(what) {
         $("#redditoCheckBox").prop("checked", false);
     }
     else {
-        $("#labelDialog").text("Modifica persona");
+        $(".labelDialog").text("Modifica persona");
 
         $("#nomeAgg").val(persone[idTmp].nome);
         $("#cognomeAgg").val(persone[idTmp].cognome);
@@ -204,7 +204,7 @@ function reset(what) {
 }
 
 function salva() {
-    if ($("#labelDialog").text().toUpperCase().includes("AGGIUNGI")) {
+    if ($(".labelDialog").text().toUpperCase().includes("AGGIUNGI")) {
         aggiungiPersona();
     } else {
         modificaPersona();
@@ -216,17 +216,14 @@ function salva() {
 }
 
 function copia() {
-    console.log("leggimi");
     var redditoToShow = 0;
     var numeroCopie = 10;
     for (var i = 0; i < numeroCopie; i++) {
         persone.push(new Persona(persone[idTmp].nome, persone[idTmp].cognome, persone[idTmp].data, persone[idTmp].reddito, persone[idTmp].sesso, persone.length));
         addRecordToScreen(persone.length - 1, persone[idTmp].nome, persone[idTmp].cognome, persone[idTmp].data, persone[idTmp].reddito, persone[idTmp].sesso);
     }
-    console.log("ciao son");
 
     var maxPage = Math.round((persone.length / elementForPage + 0.5) - 1);
-    console.log(maxPage + " - " + currentPage);
     if (maxPage + 1 > 1) {
         if (currentPage < maxPage) {
             $("#paginaSeguente").css("visibility", "visible")
@@ -353,7 +350,6 @@ function addRecordToScreen(id, nome, cognome, data, reddito, sesso) {
         var index = persone.findIndex(e => e.id == id);
         var param = $(this).prop('class').split(' ')[1];
         var width = $(this).width();
-        console.log($(this).html());
         var testo;
         if ($(this).html().indexOf("<br>") != -1 && $(this).html().indexOf("<br>") != 0) {
             testo = $(this).html().substring(0, $(this).html().indexOf("<br>"));
@@ -366,7 +362,6 @@ function addRecordToScreen(id, nome, cognome, data, reddito, sesso) {
         }
         $(this).find($('input')).focusout({ index: index, param: param }, function () {
             if ($(this).val() != "" && !(/[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>[0-9\]\/?]/).test($(this).val())) {
-                console.log((/[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/).test($(this).val()));
                 persone[index][param] = $(this).val();
                 $(this).parent().text(persone[index][param]);
             } else {
@@ -474,7 +469,6 @@ function eliminaPersona() {
     persone.splice(idTmp, 1);
 
     var maxPage = Math.round((persone.length / elementForPage + 0.5) - 1);
-    console.log(maxPage);
     if (maxPage == 1) {
         $("#pageCount").text("1");
         $("#pageCount").css("visibility", "hidden");
@@ -523,7 +517,6 @@ function showAll(type) {
     }
 
     var maxPage = Math.round((persone.length / elementForPage + 0.4) - 1);
-    console.log("MAX - " + maxPage)
     if (maxPage > 0)
         $("#pageCount").css("visibility", "visible")
     else {
