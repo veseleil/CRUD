@@ -189,3 +189,21 @@ th {
 	*/
 	#no-more-tables td:before { content: attr(data-title); }
 }
+
+.editable input[disabled] {
+    background-color: transparent;
+    border: none;
+    cursor: auto;
+    box-shadow: none;
+    padding: 0;
+    height: auto;
+}
+.editable input[disabled]::-webkit-input-placeholder {
+    color: #333;
+}
+.editable input[disabled]::-moz-placeholder {
+    color: #333;
+}
+.editable input[disabled]:-ms-input-placeholder {
+    color: #333;
+}

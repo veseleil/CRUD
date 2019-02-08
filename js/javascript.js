@@ -340,111 +340,111 @@ function addRecordToScreen(id, nome, cognome, data, reddito, sesso) {
     reddito = persone[index].convertRedditoToValore();
     var appenTo = "<tr class=\"" + id + "\"><td class='editable-field nome'>" + nome + "</td><td class='editable-field cognome'>" + cognome + "</td><td class='editable-data'>" + formattedDate(new Date(data)) + "</td><td class='editable-reddito'>" + reddito + "</td><td class='editable-sesso'>" + sesso + "</td>";
 
-    appenTo += '<td class="text-right dropdown ' + id + '"><img class="VerticalOptions" src="img/VerticalOptions.png" data-toggle="dropdown" onclick="setIdTmp(' + id + '); reset();"><ul class="dropdown-menu dropdown-menu dropdown-menu-right"><li class=""><a data-toggle="modal" onclick="copia()">Copia</a></li><li class=""><a data-toggle="modal" data-target="#ModalElimina">Elimina</a></li></ul></td>';
+    appenTo += '<td class="text-right dropdown ' + id + '"><img class="VerticalOptions" src="img/VerticalOptions.png" data-toggle="dropdown" onclick="setIdTmp(' + id + '); reset();"><ul class="dropdown-menu dropdown-menu dropdown-menu-right"><li class=""><a data-toggle="modal" data-target="#ModalAggiungi">Modifica</a></li><li class=""><a data-toggle="modal" onclick="copia()">Copia</a></li><li class=""><a data-toggle="modal" data-target="#ModalElimina">Elimina</a></li></ul></td>';
 
     $("#tabellaPersone").append(appenTo);
 
 
-    $(".editable-field").click(function () {
-        var id = $(this).parent().prop("class");
-        var index = persone.findIndex(e => e.id == id);
-        var param = $(this).prop('class').split(' ')[1];
-        var width = $(this).width();
-        var testo;
-        if ($(this).html().indexOf("<br>") != -1 && $(this).html().indexOf("<br>") != 0) {
-            testo = $(this).html().substring(0, $(this).html().indexOf("<br>"));
-        } else {
-            testo = $(this).html();
-        }
+    // $(".editable-field").click(function () {
+    //     var id = $(this).parent().prop("class");
+    //     var index = persone.findIndex(e => e.id == id);
+    //     var param = $(this).prop('class').split(' ')[1];
+    //     var width = $(this).width();
+    //     var testo;
+    //     if ($(this).html().indexOf("<br>") != -1 && $(this).html().indexOf("<br>") != 0) {
+    //         testo = $(this).html().substring(0, $(this).html().indexOf("<br>"));
+    //     } else {
+    //         testo = $(this).html();
+    //     }
 
-        if (testo == persone[index][param]) {
-            $(this).html("<input type='text' value='" + persone[index][param] + "'/>");
-        }
-        $(this).find($('input')).focusout({ index: index, param: param }, function () {
-            if ($(this).val() != "" && !(/[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>[0-9\]\/?]/).test($(this).val())) {
-                persone[index][param] = $(this).val();
-                $(this).parent().text(persone[index][param]);
-            } else {
-                $(this).parent().html(persone[index][param] + "<br><font size='2' color='red'>non valido</font>");
-            }
-        })
+    //     if (testo == persone[index][param]) {
+    //         $(this).html("<input type='text' value='" + persone[index][param] + "'/>");
+    //     }
+    //     $(this).find($('input')).focusout({ index: index, param: param }, function () {
+    //         if ($(this).val() != "" && !(/[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>[0-9\]\/?]/).test($(this).val())) {
+    //             persone[index][param] = $(this).val();
+    //             $(this).parent().text(persone[index][param]);
+    //         } else {
+    //             $(this).parent().html(persone[index][param] + "<br><font size='2' color='red'>non valido</font>");
+    //         }
+    //     })
 
-    })
+    // })
 
-    $(".editable-reddito").click(function () {
-        var id = $(this).parent().prop("class");
-        var index = persone.findIndex(e => e.id == id);
-        if ($(this).children().length == 0) {
-            $(this).html(`
-            <select>
-                <option value="basso">meno di 10.000 €</option>
-                <option value="medio">da 10.000 a 20.000 €</option>
-                <option value="alto">pi&ugrave; di 20.000 €</option>
-            </select>
-            `);
-            $(this).find($('select')).val(persone[index].reddito);
-            //$(this).css("width", "450px");
-        }
+    // $(".editable-reddito").click(function () {
+    //     var id = $(this).parent().prop("class");
+    //     var index = persone.findIndex(e => e.id == id);
+    //     if ($(this).children().length == 0) {
+    //         $(this).html(`
+    //         <select>
+    //             <option value="basso">meno di 10.000 €</option>
+    //             <option value="medio">da 10.000 a 20.000 €</option>
+    //             <option value="alto">pi&ugrave; di 20.000 €</option>
+    //         </select>
+    //         `);
+    //         $(this).find($('select')).val(persone[index].reddito);
+    //         //$(this).css("width", "450px");
+    //     }
 
-        $(this).find($('select')).focusout({ index: index }, function () {
-            persone[index].reddito = $(this).val();
-            $(this).parent().text(persone[index].convertRedditoToValore());
-        })
-    })
+    //     $(this).find($('select')).focusout({ index: index }, function () {
+    //         persone[index].reddito = $(this).val();
+    //         $(this).parent().text(persone[index].convertRedditoToValore());
+    //     })
+    // })
 
-    $(".editable-sesso").click(function () {
-        var id = $(this).parent().prop("class");
-        var index = persone.findIndex(e => e.id == id);
-        if ($(this).children().length == 0) {
-            $(this).html(`
-            <select>
-                <option value="Maschio">Maschio</option>
-                <option value="Femmina">Femmina</option>
-            </select>
-            `);
-            $(this).find($('select')).val(persone[index].sesso);
-        }
+    // $(".editable-sesso").click(function () {
+    //     var id = $(this).parent().prop("class");
+    //     var index = persone.findIndex(e => e.id == id);
+    //     if ($(this).children().length == 0) {
+    //         $(this).html(`
+    //         <select>
+    //             <option value="Maschio">Maschio</option>
+    //             <option value="Femmina">Femmina</option>
+    //         </select>
+    //         `);
+    //         $(this).find($('select')).val(persone[index].sesso);
+    //     }
 
-        $(this).find($('select')).focusout({ index: index }, function () {
-            persone[index].sesso = $(this).val();
-            $(this).parent().text(persone[index].sesso);
-        })
-    })
+    //     $(this).find($('select')).focusout({ index: index }, function () {
+    //         persone[index].sesso = $(this).val();
+    //         $(this).parent().text(persone[index].sesso);
+    //     })
+    // })
 
-    $(".editable-reddito").click(function () {
-        var id = $(this).parent().prop("class");
-        var index = persone.findIndex(e => e.id == id);
-        if ($(this).children().length == 0) {
-            $(this).html(`
-            <select>
-                <option value="basso">meno di 10.000 €</option>
-                <option value="medio">da 10.000 a 20.000 €</option>
-                <option value="alto">pi&ugrave; di 20.000 €</option>
-            </select>
-            `);
-            $(this).find($('select')).val(persone[index].reddito);
-        }
+    // $(".editable-reddito").click(function () {
+    //     var id = $(this).parent().prop("class");
+    //     var index = persone.findIndex(e => e.id == id);
+    //     if ($(this).children().length == 0) {
+    //         $(this).html(`
+    //         <select>
+    //             <option value="basso">meno di 10.000 €</option>
+    //             <option value="medio">da 10.000 a 20.000 €</option>
+    //             <option value="alto">pi&ugrave; di 20.000 €</option>
+    //         </select>
+    //         `);
+    //         $(this).find($('select')).val(persone[index].reddito);
+    //     }
 
-        $(this).find($('select')).focusout({ index: index }, function () {
-            persone[index].reddito = $(this).val();
-            $(this).parent().text(persone[index].convertRedditoToValore());
-        })
-    })
+    //     $(this).find($('select')).focusout({ index: index }, function () {
+    //         persone[index].reddito = $(this).val();
+    //         $(this).parent().text(persone[index].convertRedditoToValore());
+    //     })
+    // })
 
-    $(".editable-data").click(function () {
-        var testo = $(this).text().split('-').reverse().join('-');
-        var id = $(this).parent().prop("class");
-        var index = persone.findIndex(e => e.id == id);
-        if (testo != "" && testo != undefined) {
-            $(this).html("<input type='date' value='" + testo + "'/>");
-            $(this).css("width", "20%");
+    // $(".editable-data").click(function () {
+    //     var testo = $(this).text().split('-').reverse().join('-');
+    //     var id = $(this).parent().prop("class");
+    //     var index = persone.findIndex(e => e.id == id);
+    //     if (testo != "" && testo != undefined) {
+    //         $(this).html("<input type='date' value='" + testo + "'/>");
+    //         $(this).css("width", "20%");
 
-            $(this).find($('input')).focusout({ index: index }, function () {
-                persone[index].data = $(this).val();
-                $(this).parent().text(formattedDate(new Date(persone[index].data)));
-            })
-        }
-    })
+    //         $(this).find($('input')).focusout({ index: index }, function () {
+    //             persone[index].data = $(this).val();
+    //             $(this).parent().text(formattedDate(new Date(persone[index].data)));
+    //         })
+    //     }
+    // })
 }
 
 function modificaPersona() {
