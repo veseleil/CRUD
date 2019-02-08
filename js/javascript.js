@@ -15,6 +15,17 @@ class Persona {
         this.reddito = reddito;
         this.sesso = sesso;
     }
+
+    convertRedditoToValore() {
+        switch (this.reddito) {
+            case "basso":
+                return "meno di 10.000 €";
+            case "medio":
+                return "da 10.000 a 20.000 €";
+            case "alto":
+                return "più di 20.000 €";
+        }
+    }
 }
 
 var persone = [];
@@ -29,16 +40,18 @@ var idTmp = 0;
 var elementForPage = 10;
 var currentPage = 0;
 
-persone.push(new Persona("gatto", "miao", "2001-06-02", 1, "Maschio", persone.length));
-addRecordToScreen(persone.length, "gatto", "miao", "2001-06-02", 1, "Maschio");
+persone.push(new Persona("gatto", "miao", "2001-06-02", "basso", "Maschio", persone.length));
+addRecordToScreen(persone.length - 1, "gatto", "miao", "2001-06-02", "basso", "Maschio");
 showAll("az");
 
 $("#nomeCheckBox").change(function () {
 
     if (this.checked) {
         $("#nomeCerca").prop('readonly', false);
+        $("#nomeCerca").prop('required', true);
     } else {
         $("#nomeCerca").prop('readonly', true);
+        $("#nomeCerca").removeAttr('required');
     }
 });
 
@@ -46,8 +59,10 @@ $("#cognomeCheckBox").change(function () {
 
     if (this.checked) {
         $("#cognomeCerca").prop('readonly', false);
+        $("#cognomeCerca").prop('required', true);
     } else {
         $("#cognomeCerca").prop('readonly', true);
+        $("#cognomeCerca").removeAttr('required');
     }
 });
 
@@ -55,8 +70,10 @@ $("#dataCheckBox").change(function () {
 
     if (this.checked) {
         $("#dataCerca").prop('readonly', false);
+        $("#dataCerca").prop('required', true);
     } else {
         $("#dataCerca").prop('readonly', true);
+        $("#dataCerca").removeAttr('required');
     }
 });
 
@@ -147,6 +164,7 @@ function reset(what) {
     $("#nomeAgg").val("");
     $("#cognomeAgg").val("");
     $("#dataAgg").val("1990-01-01");
+    $("#redditoAgg").val("basso");
 
     if (what == "aggiungi") {
         $("#labelDialog").text("Aggiungi persona");
@@ -172,7 +190,7 @@ function reset(what) {
         $("#nomeAgg").val(persone[idTmp].nome);
         $("#cognomeAgg").val(persone[idTmp].cognome);
         $("#dataAgg").val(persone[idTmp].data);
-        $("#redditoAgg").prop('selectedIndex', persone[idTmp].reddito);
+        $("#redditoAgg").val(persone[idTmp].reddito);
 
         //$("#sessoAgg").val(persone[idTmp].sesso);
         if (persone[idTmp].sesso) {
@@ -202,21 +220,8 @@ function copia() {
     var redditoToShow = 0;
     var numeroCopie = 10;
     for (var i = 0; i < numeroCopie; i++) {
-        switch (persone[idTmp].reddito) {
-            case 0:
-                redditoToShow = "meno di 10.000 €";
-                break;
-
-            case 1:
-                redditoToShow = "da 10.000 a 20.000 €";
-                break;
-
-            case 2:
-                redditoToShow = "più di 20.000 €";
-                break;
-        }
         persone.push(new Persona(persone[idTmp].nome, persone[idTmp].cognome, persone[idTmp].data, persone[idTmp].reddito, persone[idTmp].sesso, persone.length));
-        addRecordToScreen(persone.length - 1, persone[idTmp].nome, persone[idTmp].cognome, persone[idTmp].data, redditoToShow, persone[idTmp].sesso);
+        addRecordToScreen(persone.length - 1, persone[idTmp].nome, persone[idTmp].cognome, persone[idTmp].data, persone[idTmp].reddito, persone[idTmp].sesso);
     }
     console.log("ciao son");
 
@@ -242,21 +247,7 @@ function cerca() {
     if (!$("#nomeCheckBox").prop("checked") && !$("#cognomeCheckBox").prop("checked") && !$("#dataCheckBox").prop("checked") && !$("#redditoCheckBox").prop("checked") && !($("#sessoCercaF").prop("checked") || $("#sessoCercaM").prop("checked"))) {
         $("#tabellaPersone").children().remove();
         persone.forEach(element => {
-            var redditoToShow = 0;
-            switch (element.reddito) {
-                case 0:
-                    redditoToShow = "meno di 10.000 €";
-                    break;
-
-                case 1:
-                    redditoToShow = "da 10.000 a 20.000 €";
-                    break;
-
-                case 2:
-                    redditoToShow = "più di 20.000 €";
-                    break;
-            }
-            addRecordToScreen(element.id, element.nome, element.cognome, element.data, redditoToShow, element.sesso);
+            addRecordToScreen(element.id, element.nome, element.cognome, element.data, element.reddito, element.sesso);
         });
     } else {
         if ($("#nomeCheckBox").prop("checked") == true) {
@@ -297,22 +288,9 @@ function cerca() {
                     aggiungi = true;
                 }
             }
-            var redditoToShow = 0;
+
             if (redditoCerca != undefined) {
-                switch (element.reddito) {
-                    case 0:
-                        redditoToShow = "meno di 10.000 €";
-                        break;
-
-                    case 1:
-                        redditoToShow = "da 10.000 a 20.000 €";
-                        break;
-
-                    case 2:
-                        redditoToShow = "più di 20.000 €";
-                        break;
-                }
-                if (redditoToShow.includes(redditoCerca)) {
+                if (element.reddito.includes(redditoCerca)) {
                     aggiungi = true;
                 }
             }
@@ -323,7 +301,7 @@ function cerca() {
             }
 
             if (aggiungi) {
-                addRecordToScreen(element.id, element.nome, element.cognome, element.data, redditoToShow, element.sesso);
+                addRecordToScreen(element.id, element.nome, element.cognome, element.data, element.reddito, element.sesso);
             }
         });
     }
@@ -348,23 +326,8 @@ function aggiungiPersona() {
         sesso = "Femmina";
     }
 
-    var redditoToAdd = 0;
-    switch (reddito) {
-        case "meno di 10.000 $":
-            redditoToAdd = 0;
-            break;
-
-        case "da 10.000 a 20.000 $":
-            redditoToAdd = 1;
-            break;
-
-        case "più di 20.000 $":
-            redditoToAdd = 2;
-            break;
-    }
-
     var id = persone.length;
-    persone.push(new Persona(nome, cognome, (data), redditoToAdd, sesso, id));
+    persone.push(new Persona(nome, cognome, (data), reddito, sesso, id));
 
     // var appenTo = "<tr class=\"" + id + "\"><td>" + nome + "</td><td>" + cognome + "</td><td>" + formattedDate(new Date(data)) + "</td><td>" + reddito + "</td><td>" + sesso + "</td>";
 
@@ -375,9 +338,12 @@ function aggiungiPersona() {
 }
 
 function addRecordToScreen(id, nome, cognome, data, reddito, sesso) {
-    var appenTo = "<tr class=\"" + id + "\"><td class='editable-field'>" + nome + "</td><td class='editable-field'>" + cognome + "</td><td class='editable-data'>" + formattedDate(new Date(data)) + "</td><td class='editable-reddito'>" + reddito + "</td><td class='editable-sesso'>" + sesso + "</td>";
 
-    appenTo += '<td class="text-right dropdown ' + id + '"><img class="VerticalOptions" src="img/VerticalOptions.png" data-toggle="dropdown" onclick="setIdTmp(' + id + '); reset();"><ul class="dropdown-menu dropdown-menu dropdown-menu-right"><li class=""><a class="" data-toggle="modal" data-target="#ModalAggiungi">Modifica</a></li><li class=""><a data-toggle="modal" onclick="copia()">Copia</a></li><li class=""><a data-toggle="modal" data-target="#ModalElimina">Elimina</a></li></ul></td>';
+    var index = persone.findIndex(e => e.id == id);
+    reddito = persone[index].convertRedditoToValore();
+    var appenTo = "<tr class=\"" + id + "\"><td class='editable-field nome'>" + nome + "</td><td class='editable-field cognome'>" + cognome + "</td><td class='editable-data'>" + formattedDate(new Date(data)) + "</td><td class='editable-reddito'>" + reddito + "</td><td class='editable-sesso'>" + sesso + "</td>";
+
+    appenTo += '<td class="text-right dropdown ' + id + '"><img class="VerticalOptions" src="img/VerticalOptions.png" data-toggle="dropdown" onclick="setIdTmp(' + id + '); reset();"><ul class="dropdown-menu dropdown-menu dropdown-menu-right"><li class=""><a data-toggle="modal" onclick="copia()">Copia</a></li><li class=""><a data-toggle="modal" data-target="#ModalElimina">Elimina</a></li></ul></td>';
 
     $("#tabellaPersone").append(appenTo);
 
@@ -385,44 +351,105 @@ function addRecordToScreen(id, nome, cognome, data, reddito, sesso) {
     $(".editable-field").click(function () {
         var id = $(this).parent().prop("class");
         var index = persone.findIndex(e => e.id == id);
-        console.log(index);
+        var param = $(this).prop('class').split(' ')[1];
         var width = $(this).width();
-        console.log(1,$(this), $(this).first())
-        $(this).html("<input type='text' value='" + ($(this).text() == persone[index].nome ? persone[index].nome : $(this).first().value) + "'/>");
-        $(this).css("width", width + "px");
-        $(this).find($('input')).focus();
+        console.log($(this).html());
+        var testo;
+        if ($(this).html().indexOf("<br>") != -1 && $(this).html().indexOf("<br>") != 0) {
+            testo = $(this).html().substring(0, $(this).html().indexOf("<br>"));
+        } else {
+            testo = $(this).html();
+        }
+
+        if (testo == persone[index][param]) {
+            $(this).html("<input type='text' value='" + persone[index][param] + "'/>");
+        }
+        $(this).find($('input')).focusout({ index: index, param: param }, function () {
+            if ($(this).val() != "" && !(/[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>[0-9\]\/?]/).test($(this).val())) {
+                console.log((/[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/).test($(this).val()));
+                persone[index][param] = $(this).val();
+                $(this).parent().text(persone[index][param]);
+            } else {
+                $(this).parent().html(persone[index][param] + "<br><font size='2' color='red'>non valido</font>");
+            }
+        })
 
     })
 
     $(".editable-reddito").click(function () {
-        var testo = $(this).text().split('-').reverse().join('-');
-        console.log(testo)
-        var width = $(this).width() + 10;
-        if (testo != "" && testo != undefined) {
+        var id = $(this).parent().prop("class");
+        var index = persone.findIndex(e => e.id == id);
+        if ($(this).children().length == 0) {
             $(this).html(`
             <select>
-                <option selected>meno di 10.000 €</option>
-                <option>da 10.000 a 20.000 €</option>
-                <option>pi&ugrave; di 20.000 €</option>
+                <option value="basso">meno di 10.000 €</option>
+                <option value="medio">da 10.000 a 20.000 €</option>
+                <option value="alto">pi&ugrave; di 20.000 €</option>
             </select>
             `);
-            $(this).css("width", width + "px");
+            $(this).find($('select')).val(persone[index].reddito);
+            //$(this).css("width", "450px");
         }
+
+        $(this).find($('select')).focusout({ index: index }, function () {
+            persone[index].reddito = $(this).val();
+            $(this).parent().text(persone[index].convertRedditoToValore());
+        })
+    })
+
+    $(".editable-sesso").click(function () {
+        var id = $(this).parent().prop("class");
+        var index = persone.findIndex(e => e.id == id);
+        if ($(this).children().length == 0) {
+            $(this).html(`
+            <select>
+                <option value="Maschio">Maschio</option>
+                <option value="Femmina">Femmina</option>
+            </select>
+            `);
+            $(this).find($('select')).val(persone[index].sesso);
+        }
+
+        $(this).find($('select')).focusout({ index: index }, function () {
+            persone[index].sesso = $(this).val();
+            $(this).parent().text(persone[index].sesso);
+        })
+    })
+
+    $(".editable-reddito").click(function () {
+        var id = $(this).parent().prop("class");
+        var index = persone.findIndex(e => e.id == id);
+        if ($(this).children().length == 0) {
+            $(this).html(`
+            <select>
+                <option value="basso">meno di 10.000 €</option>
+                <option value="medio">da 10.000 a 20.000 €</option>
+                <option value="alto">pi&ugrave; di 20.000 €</option>
+            </select>
+            `);
+            $(this).find($('select')).val(persone[index].reddito);
+        }
+
+        $(this).find($('select')).focusout({ index: index }, function () {
+            persone[index].reddito = $(this).val();
+            $(this).parent().text(persone[index].convertRedditoToValore());
+        })
     })
 
     $(".editable-data").click(function () {
         var testo = $(this).text().split('-').reverse().join('-');
-        console.log(testo)
-        var width = $(this).width() + 10;
+        var id = $(this).parent().prop("class");
+        var index = persone.findIndex(e => e.id == id);
         if (testo != "" && testo != undefined) {
             $(this).html("<input type='date' value='" + testo + "'/>");
-            $(this).css("width", width + "px");
+            $(this).css("width", "20%");
+
+            $(this).find($('input')).focusout({ index: index }, function () {
+                persone[index].data = $(this).val();
+                $(this).parent().text(formattedDate(new Date(persone[index].data)));
+            })
         }
     })
-}
-
-function editNome(id) {
-    console.log($("#" + id).find($("td").html("<input type='text' value='ciao'/>")));
 }
 
 function modificaPersona() {
@@ -433,21 +460,6 @@ function modificaPersona() {
     var data = $("#dataAgg").val();
     var reddito = $("#redditoAgg").val();
 
-    var redditoToAdd = 0;
-    switch (reddito) {
-        case "meno di 10.000 €":
-            redditoToAdd = 0;
-            break;
-
-        case "da 10.000 a 20.000€":
-            redditoToAdd = 1;
-            break;
-
-        case "più di 20.000 €":
-            redditoToAdd = 2;
-            break;
-    }
-
     var sesso = "";
     if ($("#sessoAggM").prop("checked") == true) {
         sesso = "Maschio";
@@ -455,11 +467,23 @@ function modificaPersona() {
         sesso = "Femmina";
     }
 
-    persone[idTmp].modifica(nome, cognome, (data), redditoToAdd, sesso);
+    persone[idTmp].modifica(nome, cognome, (data), reddito, sesso);
 }
 
 function eliminaPersona() {
     persone.splice(idTmp, 1);
+
+    var maxPage = Math.round((persone.length / elementForPage + 0.5) - 1);
+    console.log(maxPage);
+    if (maxPage == 1) {
+        $("#pageCount").text("1");
+        $("#pageCount").css("visibility", "hidden");
+        $("#paginaPrecedente").css("visibility", "hidden");
+        $("#primaPagina").css("visibility", "hidden");
+        currentPage = 0;
+    }
+
+
     showAll("az");
 }
 
@@ -483,48 +507,27 @@ function showAll(type) {
 
         for (var e = currentPage * elementForPage; e < (currentPage * elementForPage) + elementForPage; e++) {
             if (persone[e] != undefined) {
-                var redditoToShow = 0;
-                switch (persone[e].reddito) {
-                    case 0:
-                        redditoToShow = "meno di 10.000 €";
-                        break;
 
-                    case 1:
-                        redditoToShow = "da 10.000 a 20.000 €";
-                        break;
-
-                    case 2:
-                        redditoToShow = "più di 20.000 €";
-                        break;
-                }
-
-                addRecordToScreen(persone[e].id, persone[e].nome, persone[e].cognome, persone[e].data, redditoToShow, persone[e].sesso);
+                addRecordToScreen(persone[e].id, persone[e].nome, persone[e].cognome, persone[e].data, persone[e].reddito, persone[e].sesso);
             }
         }
     } else {
 
         for (var e = (currentPage * elementForPage) + elementForPage - 1; e > currentPage * elementForPage - 1; e--) {
-            console.log("aeryu");
             if (persone[e] != undefined) {
                 var redditoToShow = 0;
-                console.log("aeryuciao");
-                switch (persone[e].reddito) {
-                    case 0:
-                        redditoToShow = "meno di 10.000 €";
-                        break;
 
-                    case 1:
-                        redditoToShow = "da 10.000 a 20.000 €";
-                        break;
-
-                    case 2:
-                        redditoToShow = "più di 20.000 €";
-                        break;
-                }
-
-                addRecordToScreen(persone[e].id, persone[e].nome, persone[e].cognome, persone[e].data, redditoToShow, persone[e].sesso);
+                addRecordToScreen(persone[e].id, persone[e].nome, persone[e].cognome, persone[e].data, persone[e].reddito, persone[e].sesso);
             }
         }
+    }
+
+    var maxPage = Math.round((persone.length / elementForPage + 0.4) - 1);
+    console.log("MAX - " + maxPage)
+    if (maxPage > 0)
+        $("#pageCount").css("visibility", "visible")
+    else {
+        $("#pageCount").css("visibility", "hidden")
     }
 }
 

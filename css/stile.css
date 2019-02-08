@@ -32,6 +32,11 @@ body {
     border-collapse: collapse; 
 }
 
+td {
+    width: 20%;
+    max-width: 20%;
+}
+
 #tabellaPersone tr {
     border : 1px solid #107eee;
 }
@@ -122,13 +127,13 @@ th {
     height: 25px
 }
 
-.btnSalva {
+.btnGreen {
     background-color: #5EF05E;
     border-color: #5EF05E;
     color: #fff
 }
 
-.btnSalva:hover {
+.btnGreen:hover {
     background-color: #58E058;
     border-color: #58E058
 }
