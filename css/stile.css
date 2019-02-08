@@ -1,46 +1,134 @@
-body{
+.dropdown:hover,
+a:hover,
+th:hover {
+    cursor: pointer
+}
+
+body {
     height: 500px;
+    background-color: #ededed;
 }
 
-th:hover, a:hover {
-    cursor: pointer;
-}
-
-.VerticalOptions{
+.VerticalOptions {
     width: 20px;
-    height: 20px;
+    height: 20px
 }
 
-.dropdown-menu{
-    padding: 10px;
+.dropdown-menu {
+    padding: 10px
 }
 
-.container-fluid{
+.container-fluid {
+    background-color: #fff!important
+}
+
+.red-back {
+    background-color: red
+}
+
+.table {
+    width: 80%;
+    margin-top: 20px;
+    border-collapse: collapse; 
+}
+
+#tabellaPersone tr {
+    border : 1px solid #107eee;
+}
+
+.table-header {
+    background-color: #107eee;
+    color: #fff;
+    height: 40px;
+    line-height: 27px
+}
+
+tr:nth-child(odd):not(.table-header) {
+    background-color: #fafafa
+}
+
+tr:nth-child(even):not(.table-header) {
+    background-color: #f1f1f1
+}
+
+td,
+th {
+    text-align: center
+}
+
+#toolbar {
+    top: 430px;
     width: 100%;
 }
 
-.btnAggiungi{
+#toolbar Button {
+    height: 30px;
+    line-height: 0;
+    margin-left: 2px;
+    margin-right: 2px;
+    border-radius: 5px
+}
+
+.btnAggiungi,
+.btnCerca {
     position: fixed;
-    bottom: 37px;
     right: 37px;
     text-align: center;
     background-color: #5EF05E;
     height: 65px;
     width: 67px;
+    box-shadow: none
+}
+
+#redditoAgg {
+    margin-left: 20px
+}
+
+#sessoAggM {
+    background-image: url(img/plus.png)
+}
+
+.SearchButton {
+    margin-top: 6px;
+    font-size: 25px
+}
+
+.btnAggiungi {
+    bottom: 37px;
     border: none;
-    border-radius: 70px;
-    box-shadow: none;
+    border-radius: 70px
 }
 
-.btnAggiungi:focus{
-    outline: none
+.btnCerca {
+    color: #fff;
+    padding: 10px 15px;
+    bottom: 110px;
+    border: none;
+    border-radius: 70px
 }
 
-.btnAggiungi:hover{
-    background-color: #58E058;
+.btnAggiungi:focus,
+.btnCerca:focus {
+    outline: 0
 }
 
-.PlusIcon{
+.btnAggiungi:hover,
+.btnCerca:hover {
+    background-color: #58E058
+}
+
+.PlusIcon {
     width: 25px;
-    height: 25px;
+    height: 25px
+}
+
+.btnSalva {
+    background-color: #5EF05E;
+    border-color: #5EF05E;
+    color: #fff
+}
+
+.btnSalva:hover {
+    background-color: #58E058;
+    border-color: #58E058
 }
