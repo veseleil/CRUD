@@ -1,3 +1,9 @@
+<?php
+
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="it">
 
@@ -13,7 +19,8 @@
 </head>
 
 <body>
-    <div class="container-fluid"> <button type="button" class="btnAggiungi" data-toggle="modal"
+    <div class="container-fluid"> 
+    <button type="button" class="btnAggiungi" data-toggle="modal"
             data-target="#ModalAggiungi" onclick="reset('aggiungi')"><img class="PlusIcon" src="img/plus.png"
                 alt="#"></button> <button type="button" class="btnCerca" data-toggle="modal" data-target="#ModalCerca"
             onclick="reset('cerca')"><i class="SearchButton fas fa-search"></i></button>
@@ -118,6 +125,7 @@
         </div>
     </div>
     <div class="row no-more-tables" style="min-height: 430px;">
+    <button type="button" class="btn btn-primary">Primary</button>  
         <table class="table table-sm table-condensed cf">
             <thead class="tableHeader">
                 <tr class="table-header">
