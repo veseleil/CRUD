@@ -247,7 +247,12 @@ function reset(what) {
         $("#dataAgg").val(personaDaMod.data);
         $("#redditoAgg").val(personaDaMod.reddito);
 
-        $("#sessoAgg").val(personaDaMod.sesso);
+        if(personaDaMod.sesso ===  $("#sessoAggF").val()){
+            $("#sessoAggF").prop("checked", true);
+        }
+        if(personaDaMod.sesso ===  $("#sessoAggM").val()){
+            $("#sessoAggM").prop("checked", true);
+        }
     }
 }
 
