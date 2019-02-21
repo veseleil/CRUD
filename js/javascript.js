@@ -1,11 +1,13 @@
 class Persona {
-    constructor(nome, cognome, data, reddito, sesso, id) {
+    constructor(nome, cognome, data, reddito, sesso, id, email, password) {
         this.nome = nome;
         this.cognome = cognome;
         this.data = data;
         this.reddito = reddito;
         this.sesso = sesso;
         this.id = id;
+        this.email = email;
+        this.password = password;
     }
 
     modifica(nome, cognome, data, reddito, sesso) {
@@ -39,10 +41,13 @@ var idTmp = 0;
 
 var elementForPage = 10;
 var currentPage = 0;
-
-persone.push(new Persona("gatto", "miao", "2001-06-02", "basso", "Maschio", persone.length));
-addRecordToScreen(persone.length - 1, "gatto", "miao", "2001-06-02", "basso", "Maschio");
+/*
+persone.push(new Persona("Gianmaria", "Rovelli", "2001-06-02", "basso", "Maschio", persone.length));
+addRecordToScreen(persone.length - 1, "Gianmaria", "Rovelli", "2001-06-02", "basso", "Maschio");
+persone.push(new Persona("Federica", "Gatti", "2007-02-08", "medio", "Femmina", persone.length));
+addRecordToScreen(persone.length - 1, "Federica", "Gatti", "2001-06-02", "medio", "Femmina");
 showAll("az");
+*/
 
 $("#nomeCheckBox").change(function () {
 
@@ -165,9 +170,12 @@ function reset(what) {
     $("#cognomeAgg").val("");
     $("#dataAgg").val("1990-01-01");
     $("#redditoAgg").val("basso");
+    $("#emailAggField").hide();
 
     if (what == "aggiungi") {
         $(".labelDialog").text("Aggiungi persona");
+        $("#typeOfSubmit").val("aggiungi");
+        $("#emailAggField").show();
     } else if (what == "cerca") {
         $("#nomeCerca").prop('readonly', true);
         $("#nomeCerca").val("");
@@ -176,6 +184,7 @@ function reset(what) {
         $("#dataCerca").prop('readonly', true);
         $("#dataCerca").val("");
         $("#redditoCerca").prop('disabled', 'disabled');
+        $("#emailAggField").hide();
 
         $("#sessoCercaM").prop("checked", false);
         $("#sessoCercaF").prop("checked", false);
@@ -185,21 +194,18 @@ function reset(what) {
         $("#redditoCheckBox").prop("checked", false);
     }
     else {
+        let personaDaMod = persone.find(o => o.id === idTmp);
         $(".labelDialog").text("Modifica persona");
+        $("#typeOfSubmit").val("modifica");
+        $("#emailAggField").hide();
+        $("#idPersona").val(personaDaMod.id);
 
-        $("#nomeAgg").val(persone[idTmp].nome);
-        $("#cognomeAgg").val(persone[idTmp].cognome);
-        $("#dataAgg").val(persone[idTmp].data);
-        $("#redditoAgg").val(persone[idTmp].reddito);
+        $("#nomeAgg").val(personaDaMod.nome);
+        $("#cognomeAgg").val(personaDaMod.cognome);
+        $("#dataAgg").val(personaDaMod.data);
+        $("#redditoAgg").val(personaDaMod.reddito);
 
-        //$("#sessoAgg").val(persone[idTmp].sesso);
-        if (persone[idTmp].sesso) {
-            $("#sessoAggM").prop("checked") = true;
-            $("#sessoAggF").prop("checked") = false;
-        } else {
-            $("#sessoAggF").prop("checked") = true;
-            $("#sessoAggM").prop("checked") = false;
-        }
+        $("#sessoAgg").val(personaDaMod.sesso);
     }
 }
 
@@ -217,7 +223,7 @@ function salva() {
 
 function copia() {
     var redditoToShow = 0;
-    var numeroCopie = 10;
+    var numeroCopie = 1;
     for (var i = 0; i < numeroCopie; i++) {
         persone.push(new Persona(persone[idTmp].nome, persone[idTmp].cognome, persone[idTmp].data, persone[idTmp].reddito, persone[idTmp].sesso, persone.length));
         addRecordToScreen(persone.length - 1, persone[idTmp].nome, persone[idTmp].cognome, persone[idTmp].data, persone[idTmp].reddito, persone[idTmp].sesso);
@@ -344,6 +350,7 @@ function addRecordToScreen(id, nome, cognome, data, reddito, sesso) {
 
     $("#tabellaPersone").append(appenTo);
 
+    /*
 
     $(".editable-field").click(function () {
         var id = $(this).parent().prop("class");
@@ -445,6 +452,8 @@ function addRecordToScreen(id, nome, cognome, data, reddito, sesso) {
             })
         }
     })
+
+    */
 }
 
 function modificaPersona() {
@@ -462,7 +471,8 @@ function modificaPersona() {
         sesso = "Femmina";
     }
 
-    persone[idTmp].modifica(nome, cognome, (data), reddito, sesso);
+    let personaDaMod = persone.find(o => o.id === idTmp);
+    persone[persone.indexOf(personaDaMod)].modifica(nome, cognome, (data), reddito, sesso);
 }
 
 function eliminaPersona() {

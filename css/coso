@@ -1,0 +1,29 @@
+<tr class="0">
+                    <td class='editable-field nome'>
+                        $row['nome']
+                    </td>
+                    <td class='editable-field cognome'>
+                        $row['cognome']
+                        </td>
+                    <td class='editable-data'>
+                        $row['data']
+                    </td>
+                    <td class='editable-reddito'>
+                        $row['reddito']
+                    </td>
+                    <td class='editable-sesso'>
+                        $row['sesso']
+                    </td>
+                    <td class="text-right dropdown 0">
+                        <img class="VerticalOptions" src="img/VerticalOptions.png" data-toggle="dropdown" onclick="setIdTmp(0); reset();">
+                            <ul class="dropdown-menu dropdown-menu dropdown-menu-right">
+                                <li class="">
+                                    <a data-toggle="modal" data-target="#ModalAggiungi">
+                                        Modifica
+                                    </a>
+                                </li>
+                                <li class="">
+                                    <a data-toggle="modal" onclick="copia()">
+                                        Copia
+                                    </a></li><li class=""><a data-toggle="modal" data-target="#ModalElimina">Elimina</a></li></ul></td>
+               

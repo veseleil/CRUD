@@ -81,7 +81,7 @@ th {
     position: fixed;
     right: 37px;
     text-align: center;
-    background-color: #5EF05E;
+    background-color: #107eee;
     height: 65px;
     width: 67px;
     box-shadow: none
@@ -121,7 +121,7 @@ th {
 
 .btnAggiungi:hover,
 .btnCerca:hover {
-    background-color: #58E058
+    background-color: #107eee
 }
 
 .PlusIcon {
@@ -130,14 +130,14 @@ th {
 }
 
 .btnGreen {
-    background-color: #5EF05E;
-    border-color: #5EF05E;
+    background-color: #107eee;
+    border-color: #107eee;
     color: #fff
 }
 
 .btnGreen:hover {
-    background-color: #58E058;
-    border-color: #58E058
+    background-color: #107eee;
+    border-color: #107eee
 }
 
 @media only screen and (max-width: 800px) {
