@@ -49,46 +49,49 @@ addRecordToScreen(persone.length - 1, "Federica", "Gatti", "2001-06-02", "medio"
 showAll("az");
 */
 
-$("#nomeCheckBox").change(function () {
+$(document).ready(function() {
 
-    if (this.checked) {
-        $("#nomeCerca").prop('readonly', false);
-        $("#nomeCerca").prop('required', true);
-    } else {
-        $("#nomeCerca").prop('readonly', true);
-        $("#nomeCerca").removeAttr('required');
-    }
-});
+    $("#nomeCheckBox").change(function () {
+        if (this.checked) {
+            $("#nomeCerca").prop('readonly', false);
+            $("#nomeCerca").prop('required', true);
+        } else {
+            $("#nomeCerca").prop('readonly', true);
+            $("#nomeCerca").removeAttr('required');
+        }
+    });
+    
+    $("#cognomeCheckBox").change(function () {
+    
+        if (this.checked) {
+            $("#cognomeCerca").prop('readonly', false);
+            $("#cognomeCerca").prop('required', true);
+        } else {
+            $("#cognomeCerca").prop('readonly', true);
+            $("#cognomeCerca").removeAttr('required');
+        }
+    });
+    
+    $("#dataCheckBox").change(function () {
+    
+        if (this.checked) {
+            $("#dataCerca").prop('readonly', false);
+            $("#dataCerca").prop('required', true);
+        } else {
+            $("#dataCerca").prop('readonly', true);
+            $("#dataCerca").removeAttr('required');
+        }
+    });
+    
+    $("#redditoCheckBox").change(function () {
+    
+        if (this.checked) {
+            $("#redditoCerca").removeAttr('disabled');
+        } else {
+            $("#redditoCerca").prop('disabled', 'disabled');
+        }
+    });
 
-$("#cognomeCheckBox").change(function () {
-
-    if (this.checked) {
-        $("#cognomeCerca").prop('readonly', false);
-        $("#cognomeCerca").prop('required', true);
-    } else {
-        $("#cognomeCerca").prop('readonly', true);
-        $("#cognomeCerca").removeAttr('required');
-    }
-});
-
-$("#dataCheckBox").change(function () {
-
-    if (this.checked) {
-        $("#dataCerca").prop('readonly', false);
-        $("#dataCerca").prop('required', true);
-    } else {
-        $("#dataCerca").prop('readonly', true);
-        $("#dataCerca").removeAttr('required');
-    }
-});
-
-$("#redditoCheckBox").change(function () {
-
-    if (this.checked) {
-        $("#redditoCerca").removeAttr('disabled');
-    } else {
-        $("#redditoCerca").prop('disabled', 'disabled');
-    }
 });
 
 function paginaSeguente() {
@@ -165,17 +168,35 @@ function ultimaPagina() {
     }
 }
 
+
 function reset(what) {
+    // SETTO TUTTO A DEFAULT
     $("#nomeAgg").val("");
     $("#cognomeAgg").val("");
     $("#dataAgg").val("1990-01-01");
     $("#redditoAgg").val("basso");
     $("#emailAggField").hide();
+    $("#emailAgg").removeAttr("required");
+    $("#passwordAggField").hide();
+    $("#passwordRegister").removeAttr("required");
+
+
+    $("#nomeAggField").show();
+    $("#cognomeAggField").show();
+    $("#dataAggField").show();
+    $("#redditoAggField").show();
+    $("#sessoAggFieldM").show();
+    $("#sessoAggFieldF").show();
 
     if (what == "aggiungi") {
         $(".labelDialog").text("Aggiungi persona");
         $("#typeOfSubmit").val("aggiungi");
-        $("#emailAggField").show();
+
+        $("#nomeAgg").prop("required", true);
+        $("#cognomeAgg").prop("required", true);
+    } else if(what == "rimuovi"){
+        let personaDaMod = persone.find(o => o.id === idTmp);
+        $("#idPersonaRemovePerson").val(personaDaMod.id)
     } else if (what == "cerca") {
         $("#nomeCerca").prop('readonly', true);
         $("#nomeCerca").val("");
@@ -185,6 +206,7 @@ function reset(what) {
         $("#dataCerca").val("");
         $("#redditoCerca").prop('disabled', 'disabled');
         $("#emailAggField").hide();
+        $("#passwordAggField").hide();
 
         $("#sessoCercaM").prop("checked", false);
         $("#sessoCercaF").prop("checked", false);
@@ -192,12 +214,32 @@ function reset(what) {
         $("#cognomeCheckBox").prop("checked", false);
         $("#dataCheckBox").prop("checked", false);
         $("#redditoCheckBox").prop("checked", false);
+    } else if (what == "registrati") {
+        $(".labelDialog").text("Registrazione");
+        $("#typeOfSubmit").val("registrazione");
+
+        // ATTIVO CIO CHE MI SERVE
+        $("#passwordAggField").show();
+        $("#emailAggField").show();
+        $("#emailAgg").prop("required", true);
+        $("#passwordRegister").prop("required", true);
+
+        // DISATTIVO CIO CHE NON MI SERVE
+        $("#nomeAggField").hide();
+        $("#nomeAgg").removeAttr("required");
+        $("#cognomeAggField").hide();
+        $("#cognomeAgg").removeAttr("required");
+        $("#dataAggField").hide();
+        $("#redditoAggField").hide();
+        $("#sessoAggFieldM").hide();
+        $("#sessoAggFieldF").hide();
     }
     else {
         let personaDaMod = persone.find(o => o.id === idTmp);
         $(".labelDialog").text("Modifica persona");
         $("#typeOfSubmit").val("modifica");
         $("#emailAggField").hide();
+        $("#passwordAggField").hide();
         $("#idPersona").val(personaDaMod.id);
 
         $("#nomeAgg").val(personaDaMod.nome);
@@ -511,7 +553,6 @@ function showAll(type) {
 
         for (var e = currentPage * elementForPage; e < (currentPage * elementForPage) + elementForPage; e++) {
             if (persone[e] != undefined) {
-
                 addRecordToScreen(persone[e].id, persone[e].nome, persone[e].cognome, persone[e].data, persone[e].reddito, persone[e].sesso);
             }
         }
@@ -519,8 +560,6 @@ function showAll(type) {
 
         for (var e = (currentPage * elementForPage) + elementForPage - 1; e > currentPage * elementForPage - 1; e--) {
             if (persone[e] != undefined) {
-                var redditoToShow = 0;
-
                 addRecordToScreen(persone[e].id, persone[e].nome, persone[e].cognome, persone[e].data, persone[e].reddito, persone[e].sesso);
             }
         }
@@ -586,8 +625,7 @@ function ordinaPerNome() {
 }
 
 function ordinaPerCognome() {
-    if (ordinaNomeType == "az")
-        persone.sort(compareCognome);
+    persone.sort(compareCognome);
 
     showAll(ordinaCognomeType);
 

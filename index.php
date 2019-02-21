@@ -14,12 +14,12 @@ if(isset($_SESSION["email"])){
     $logged = true;
 }
 
-if(isset($_GET["type"])){
-    $type = $_GET["type"];
+if(isset($_POST["type"])){
+    $type = $_POST["type"];
     if($type === "login"){
 
-        $email_input = $_GET["email"];
-        $pass_input = $_GET["password"];
+        $email_input = $_POST["email"];
+        $pass_input = $_POST["password"];
         $sql = "SELECT * FROM tbllogin WHERE (email=:email)";
         $stmt = $conn->prepare($sql);
         $stmt->bindValue(':email', $email_input, PDO::PARAM_STR);
@@ -28,21 +28,40 @@ if(isset($_GET["type"])){
         $table_data = "";
 
         while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-            if($row["email"] === $email_input && $row["password"] === $pass_input){
-                $_SESSION["email"] = $_GET["email"];
-                $_SESSION["password"] = $_GET["password"];
+            if($row["email"] === $email_input && $row["password"] === md5($pass_input)){
+                $_SESSION["email"] = $_POST["email"];
+                $_SESSION["password"] = $_POST["password"];
                 $logged = true;
             }
         }
-    }else if($type === "modifica" && $logged === true){
-        $nome = $_GET["nome"];
-        $cognome = $_GET["cognome"];
-        $data = $_GET["data"];
+    }else if($type === "logout"){
+        session_destroy();
+        echo "<script>window.location.href = ''</script>";
+    } else if($type === "rimuovi" && $logged === true){
+        $id = intval($_POST["idPersona"]);
+
+        /*
+        $sql = "DELETE FROM tblutenti WHERE (id=:id)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        */
+
+        $sql = "DELETE FROM tblutenti WHERE (idutente=:id)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+    }
+    else if($type === "modifica" && $logged === true){
+        $nome = $_POST["nome"];
+        $cognome = $_POST["cognome"];
+        $data = $_POST["data"];
         $time = strtotime($data);
         $data = date("Ymd", $time);
-        $reddito = $_GET["reddito"];
-        $sesso = $_GET["sessoAgg"];
-        $id = $_GET["idPersona"];
+        $reddito = $_POST["reddito"];
+        $sesso = $_POST["sessoAgg"];
+        $id = $_POST["idPersona"];
 
         $sql = "UPDATE tblutenti SET nome=:nome, cognome=:cognome, sesso=:sesso, reddito=:reddito, data=:data WHERE (idutente=:id)";
         $stmt = $conn->prepare($sql);
@@ -54,14 +73,14 @@ if(isset($_GET["type"])){
         $stmt->bindValue(':data', $data, PDO::PARAM_INT);
         $stmt->execute();
     }else if($type === "aggiungi" && $logged === true){
-        $email = $_GET["email"];
-        $nome = $_GET["nome"];
-        $cognome = $_GET["cognome"];
-        $data = $_GET["data"];
+        $email = $_POST["email"];
+        $nome = $_POST["nome"];
+        $cognome = $_POST["cognome"];
+        $data = $_POST["data"];
         $time = strtotime($data);
         $data = date("Ymd", $time);
-        $reddito = $_GET["reddito"];
-        $sesso = $_GET["sessoAgg"];
+        $reddito = $_POST["reddito"];
+        $sesso = $_POST["sessoAgg"];
 
         $sql = "INSERT INTO tblutenti VALUE(:email, :nome, :cognome, :sesso, :reddito, NULL, :data)";
         $stmt = $conn->prepare($sql);
@@ -71,6 +90,16 @@ if(isset($_GET["type"])){
         $stmt->bindValue(':sesso', $sesso, PDO::PARAM_STR);
         $stmt->bindValue(':reddito', $reddito, PDO::PARAM_STR);
         $stmt->bindValue(':data', $data, PDO::PARAM_INT);
+        $stmt->execute();
+    } else if($type == "registrazione"){
+        $email = $_POST["email"];
+        $password = $_POST["password"];
+        $password  = md5($password);
+
+        $sql = "INSERT INTO tbllogin VALUE(:email, :password)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue(':email', $email, PDO::PARAM_STR);
+        $stmt->bindValue(':password', $password, PDO::PARAM_STR);
         $stmt->execute();
     }
 }
@@ -119,7 +148,7 @@ if(isset($_GET["type"])){
                             data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
-                        <form action="" method="GET">
+                        <form action="" method="POST">
                             <input type="hidden" name="type" value="login" /> 
                             <div class="form-group row"> 
                                 <label for="emailLogin" class="col-sm-3 col-form-label">Email</label>
@@ -144,8 +173,6 @@ if(isset($_GET["type"])){
             </div>
         </div>
 
-
-
         <div class="modal fade" id="ModalAggiungi" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -154,7 +181,7 @@ if(isset($_GET["type"])){
                             data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
-                        <form action="" METHOD="GET">
+                        <form action="" METHOD="POST">
                             <input type="hidden" name="type" id="typeOfSubmit" value="" /> 
                             <input type="hidden" name="idPersona" id="idPersona" value="" /> 
                             <div class="form-group row" id="emailAggField"> <label for="emailAgg"
@@ -162,36 +189,43 @@ if(isset($_GET["type"])){
                                 <div class="col-8"> <input type="text" class="form-control" name="email" id="emailAgg"
                                          required> </div>
                             </div>
-                            <div class="form-group row"> 
+                            <div class="form-group row" id="passwordAggField"> 
+                                <label for="passwordRegister"
+                                    class="col-sm-3 col-form-label">Password</label>
+                                <div class="col-8"> 
+                                    <input type="password" class="form-control" name="password" id="passwordRegister" required> 
+                                </div>
+                            </div>
+                            <div class="form-group row" id="nomeAggField"> 
                                 <label for="nomeAgg"
                                     class="col-sm-3 col-form-label">Nome</label>
                                 <div class="col-8"> <input type="text" class="form-control" name="nome" id="nomeAgg"
                                         pattern="^[a-zA-Z0-9 ]+$" required> </div>
                             </div>
-                            <div class="form-group row"> <label for="cognomeAgg"
+                            <div class="form-group row" id="cognomeAggField"> <label for="cognomeAgg"
                                     class="col-sm-3 col-form-label">Cognome</label>
                                 <div class="col-8"> <input type="text" class="form-control" name="cognome" id="cognomeAgg"
                                         pattern="^[a-zA-Z0-9 ]+$" required> </div>
                             </div>
-                            <div class="form-group row"> <label for="dataAgg"
+                            <div class="form-group row" id="dataAggField"> <label for="dataAgg"
                                     class="col-sm-3 col-form-label">Data</label>
                                 <div class="col-8"> <input type="date" class="form-control" name="data" id="dataAgg" required>
                                 </div>
                             </div>
-                            <div class="form-group row"> <label for="redditoAgg"
+                            <div class="form-group row" id="redditoAggField"> <label for="redditoAgg"
                                     class="col-sm-3 col-form-label">Reddito</label> <select name="reddito" id="redditoAgg"
                                     class="col-7 form-control">
                                     <option value="basso" selected>meno di 10.000 €</option>
                                     <option value="medio">da 10.000 a 20.000 €</option>
                                     <option value="alto">pi&ugrave; di 20.000 €</option>
                                 </select> </div>
-                            <div class="form-check form-check-inline"> 
+                            <div class="form-check form-check-inline" id="sessoAggFieldM"> 
                                 <input class="form-check-input" type="radio" name="sessoAgg" id="sessoAggM" value="Maschio" required checked> 
                                 <label class="form-check-label" for="sessoAggM">
                                     Maschio
                                 </label> 
                             </div>
-                            <div class="form-check form-check-inline"> 
+                            <div class="form-check form-check-inline" id="sessoAggFieldF"> 
                                 <input class="form-check-input" type="radio" name="sessoAgg" id="sessoAggF" value="Femmina" required> 
                                     <label class="form-check-label" for="sessoAggF">Femmina</label> 
                                 </div>
@@ -203,6 +237,8 @@ if(isset($_GET["type"])){
             </div>
         </div>
     </div>
+
+
     <div class="modal fade" id="ModalCerca" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -257,11 +293,29 @@ if(isset($_GET["type"])){
             </div>
         </div>
     </div>
+
+
     </div class="row">
     <div style="margin-left:74.5%; margin-right:5%">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModalLogin" >Login</button> 
-        <button type="button" class="btn btn-primary">Registrati</button> 
+        <?php
+            if($logged === true){
+                echo <<<XML
+                        <form method="POST" action="">
+                            <input type="hidden" name="type" value="logout" /> 
+                            <button type="submit" class="btn btn-primary">Logout</button> 
+                        </form>
+                    XML;
+            }else {
+                echo <<<XML
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModalLogin">Login</button> 
+                XML;
+            }
+        ?>
+        
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModalAggiungi" onclick="reset('registrati');">Registrati</button> 
     </div>
+
+
     <?php 
         if($logged === true){
             // MOSTRO PRIMA PARTE
@@ -342,7 +396,7 @@ if(isset($_GET["type"])){
                                     <a data-toggle="modal" onclick="copia()">
                                         Copia
                                     </a></li><li class="">
-                                <a data-toggle="modal" data-target="#ModalElimina">
+                                <a data-toggle="modal" data-target="#ModalElimina" onclick="reset('rimuovi')">
                                     Elimina
                                 </a>
                             </li>
@@ -383,9 +437,14 @@ if(isset($_GET["type"])){
                 <div class="modal-header">
                     <h4>Sei sicuro di voler eliminare?</h4>
                 </div>
-                <div class="modal-footer"> <button type="button" class="btn btn-default btn-danger" data-dismiss="modal"
-                        onclick="eliminaPersona()">SI</button> <button type="button" class="btn btn-default "
-                        data-dismiss="modal">NO</button> </div>
+                <div class="modal-footer"> 
+                    <form action="" method="POST">
+                        <input type="hidden" name="type" value="rimuovi" /> 
+                        <input type="hidden" name="idPersona" id="idPersonaRemovePerson" value="" />
+                        <button type="submit" class="btn btn-default btn-danger">SI</button>
+                        <button type="button" class="btn btn-default " data-dismiss="modal">NO</button> 
+                    </form>
+                </div>
             </div>
         </div>
     </div>
