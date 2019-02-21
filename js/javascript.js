@@ -41,13 +41,6 @@ var idTmp = 0;
 
 var elementForPage = 10;
 var currentPage = 0;
-/*
-persone.push(new Persona("Gianmaria", "Rovelli", "2001-06-02", "basso", "Maschio", persone.length));
-addRecordToScreen(persone.length - 1, "Gianmaria", "Rovelli", "2001-06-02", "basso", "Maschio");
-persone.push(new Persona("Federica", "Gatti", "2007-02-08", "medio", "Femmina", persone.length));
-addRecordToScreen(persone.length - 1, "Federica", "Gatti", "2001-06-02", "medio", "Femmina");
-showAll("az");
-*/
 
 $("#nomeCheckBox").change(function () {
 
