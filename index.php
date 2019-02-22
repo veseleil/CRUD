@@ -163,7 +163,7 @@ if(isset($_POST["type"])){
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="labelDialog">Login</h4> <button type="button" class="close"
+                        <h4 class="labelDialogLogin">Login</h4> <button type="button" class="close"
                             data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">

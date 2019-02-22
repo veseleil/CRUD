@@ -416,6 +416,8 @@ function reset(what) {
         $("#redditoAggField").hide();
         $("#sessoAggFieldM").hide();
         $("#sessoAggFieldF").hide();
+    } else if(what == "login"){
+        $(".labelDialog").text("Login");
     }
     else {
         let personaDaMod = persone.find(o => o.id === idTmp);
@@ -523,6 +525,7 @@ function cerca() {
             sessoCerca = "Maschio";
         }
 
+        var count = 0;
 
         $("#tabellaPersone").children().remove();
         persone.forEach(element => {
@@ -555,9 +558,36 @@ function cerca() {
             }
 
             if (aggiungi) {
+                count = count + 1;
                 addRecordToScreen(element.id, element.nome, element.cognome, element.data, element.reddito, element.sesso);
             }
         });
+        
+    }
+
+
+    var maxPage = Math.round((count / elementForPage + 0.4) - 1);
+
+    if (currentPage == 0 && currentPage != maxPage) {
+        $("#paginaPrecedente").css("visibility", "hidden");
+        $("#primaPagina").css("visibility", "hidden");
+    } else {
+        $("#primaPagina").css("visibility", "hidden");
+        $("#ultimaPagina").css("visibility", "hidden");
+        $("#paginaPrecedente").css("visibility", "hidden");
+        $("#paginaSeguente").css("visibility", "hidden");
+        $("#pageCount").css("visibility", "hidden")
+    }
+
+    if (maxPage > 0) {
+        $("#pageCount").css("visibility", "visible")
+    }
+    else {
+        $("#primaPagina").css("visibility", "hidden");
+        $("#ultimaPagina").css("visibility", "hidden");
+        $("#paginaPrecedente").css("visibility", "hidden");
+        $("#paginaSeguente").css("visibility", "hidden");
+        $("#pageCount").css("visibility", "hidden")
     }
 
     $('#ModalCerca').modal('hide')
