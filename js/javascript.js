@@ -455,6 +455,7 @@ function copia() {
     var redditoToShow = 0;
     var numeroCopie = 1;
     for (var i = 0; i < numeroCopie; i++) {
+        
         persone.push(new Persona(persone[idTmp].nome, persone[idTmp].cognome, persone[idTmp].data, persone[idTmp].reddito, persone[idTmp].sesso, persone.length));
         addRecordToScreen(persone.length - 1, persone[idTmp].nome, persone[idTmp].cognome, persone[idTmp].data, persone[idTmp].reddito, persone[idTmp].sesso);
     }
@@ -607,7 +608,7 @@ function addRecordToScreen(id, nome, cognome, data, reddito, sesso) {
             </td>"
     
     `
-    appenTo += '<td class="text-right dropdown ' + id + '"><div class="optionBtn"><img class="VerticalOptions" src="img/VerticalOptions.png" data-toggle="dropdown" onclick="setIdTmp(' + id + '); reset();"><ul class="dropdown-menu dropdown-menu dropdown-menu-right"><li class=""><a data-toggle="modal" data-target="#ModalAggiungi">Modifica</a></li><li class=""><a data-toggle="modal" onclick="copia()">Copia</a></li><li class=""><a data-toggle="modal" data-target="#ModalElimina" onclick="reset(\'rimuovi\')">Elimina</a></li></ul></div></td>';
+    appenTo += '<td class="text-right dropdown ' + id + '"><div class="optionBtn"><img class="VerticalOptions" src="img/VerticalOptions.png" data-toggle="dropdown" onclick="setIdTmp(' + id + '); reset();"><ul class="dropdown-menu dropdown-menu dropdown-menu-right"><li class=""><a data-toggle="modal" data-target="#ModalAggiungi">Modifica</a></li><li class=""><a data-toggle="modal" data-target="#ModalElimina" onclick="reset(\'rimuovi\')">Elimina</a></li></ul></div></td>';
 
     $("#tabellaPersone").append(appenTo);
 }
