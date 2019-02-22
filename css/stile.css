@@ -1,7 +1,20 @@
 .dropdown:hover,
 a:hover,
-th:hover {
-    cursor: pointer
+th:hover, 
+button:hover {
+    cursor: pointer;
+}
+
+button {
+    z-index: 1;
+}
+
+.btnLoginLogout{
+    position: relative;
+    margin-top: 7px;
+    margin-bottom: 3px;
+    border-radius: 6px;
+    background-color: #107eee;
 }
 
 body {
@@ -19,8 +32,13 @@ body {
     padding: 10px
 }
 
+.optionBtn {
+    margin-top: 5px;
+}
+
 .container-fluid {
-    background-color: #fff!important;
+    background-color: #ededed;
+    width: 75%;
 }
 
 .red-back {
@@ -28,11 +46,11 @@ body {
 }
 
 .table {
-    width: 75%;
+    width: 100%;
     margin-top: 20px;
-    margin-left:13%;
-    border-collapse: collapse; 
+
 }
+
 
 td {
     width: 20%;
@@ -190,7 +208,7 @@ th {
 	#no-more-tables td:before { content: attr(data-title); }
 }
 
-.editable input[disabled] {
+.editable input[readonly] {
     background-color: transparent;
     border: none;
     cursor: auto;
@@ -198,12 +216,16 @@ th {
     padding: 0;
     height: auto;
 }
-.editable input[disabled]::-webkit-input-placeholder {
+.editable input[readonly]::-webkit-input-placeholder {
     color: #333;
 }
-.editable input[disabled]::-moz-placeholder {
+.editable input[readonly]::-moz-placeholder {
     color: #333;
 }
-.editable input[disabled]:-ms-input-placeholder {
+.editable input[readonly]:-ms-input-placeholder {
     color: #333;
+}
+
+.editable {
+    background-color: #72A4D2;
 }

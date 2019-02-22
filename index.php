@@ -73,7 +73,6 @@ if(isset($_POST["type"])){
         $stmt->bindValue(':data', $data, PDO::PARAM_INT);
         $stmt->execute();
     }else if($type === "aggiungi" && $logged === true){
-        $email = $_POST["email"];
         $nome = $_POST["nome"];
         $cognome = $_POST["cognome"];
         $data = $_POST["data"];
@@ -82,9 +81,8 @@ if(isset($_POST["type"])){
         $reddito = $_POST["reddito"];
         $sesso = $_POST["sessoAgg"];
 
-        $sql = "INSERT INTO tblutenti VALUE(:email, :nome, :cognome, :sesso, :reddito, NULL, :data)";
+        $sql = "INSERT INTO tblutenti VALUE(:nome, :cognome, :sesso, :reddito, NULL, :data)";
         $stmt = $conn->prepare($sql);
-        $stmt->bindValue(':email', $email, PDO::PARAM_STR);
         $stmt->bindValue(':nome', $nome, PDO::PARAM_STR);
         $stmt->bindValue(':cognome', $cognome, PDO::PARAM_STR);
         $stmt->bindValue(':sesso', $sesso, PDO::PARAM_STR);
@@ -132,14 +130,36 @@ if(isset($_POST["type"])){
 </head>
 
 <body>
-    <div class="container-fluid"> 
-    <button type="button" class="btnAggiungi" data-toggle="modal"
-            data-target="#ModalAggiungi" onclick="reset('aggiungi')"><img class="PlusIcon" src="img/plus.png"
-                alt="#"></button> <button type="button" class="btnCerca" data-toggle="modal" data-target="#ModalCerca"
-            onclick="reset('cerca')"><i class="SearchButton fas fa-search"></i></button>
+    <div class="container-fluid">  
+
+        <div class="row justify-content-end justify-self-center">
+            <?php
+                if($logged === true){
+                    echo <<<XML
+                            <form method="POST" action="">
+                                <input type="hidden" name="type" value="logout" /> 
+                                <button type="submit" class="btn btn-primary btnLoginLogout">Logout</button> 
+                            </form>
+                            </div>
+                                            
+                            <button type="button" class="btnAggiungi" data-toggle="modal" data-target="#ModalAggiungi" onclick="reset('aggiungi')">
+                                <img class="PlusIcon" src="img/plus.png" alt="#">
+                            </button> 
+                            <button type="button" class="btnCerca" data-toggle="modal" data-target="#ModalCerca" onclick="reset('cerca')">
+                                <i class="SearchButton fas fa-search"></i>
+                            </button>
+                        XML;
+                }else {
+                    echo <<<XML
+                        <button type="button" class="btn btn-primary btnLoginLogout" data-toggle="modal" data-target="#ModalLogin">Login</button> 
+                        <button type="button" class="btn btn-primary btnLoginLogout" data-toggle="modal" data-target="#ModalAggiungi" onclick="reset('registrati');">Registrati</button> 
+                        </div>
+                    XML;
+                }
+            ?>
 
 
-
+        
             <div class="modal fade" id="ModalLogin" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -164,14 +184,13 @@ if(isset($_POST["type"])){
                                 </div>
                             </div>
                             <div class="modal-footer"> 
-                                <button type="submit" class="btn btn-primary ">Salva</button> 
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button> 
+                                <button type="submit" class="btn btn-primary ">Entra</button> 
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Chiudi</button> 
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
-        </div>
 
         <div class="modal fade" id="ModalAggiungi" role="dialog">
             <div class="modal-dialog">
@@ -181,7 +200,7 @@ if(isset($_POST["type"])){
                             data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
-                        <form action="" METHOD="POST">
+                        <form action="" METHOD="POST" id="formAggiungi">
                             <input type="hidden" name="type" id="typeOfSubmit" value="" /> 
                             <input type="hidden" name="idPersona" id="idPersona" value="" /> 
                             <div class="form-group row" id="emailAggField"> <label for="emailAgg"
@@ -200,12 +219,12 @@ if(isset($_POST["type"])){
                                 <label for="nomeAgg"
                                     class="col-sm-3 col-form-label">Nome</label>
                                 <div class="col-8"> <input type="text" class="form-control" name="nome" id="nomeAgg"
-                                        pattern="^[a-zA-Z0-9 ]+$" required> </div>
+                                        pattern="^[a-zA-Z ]+$" required> </div>
                             </div>
                             <div class="form-group row" id="cognomeAggField"> <label for="cognomeAgg"
                                     class="col-sm-3 col-form-label">Cognome</label>
                                 <div class="col-8"> <input type="text" class="form-control" name="cognome" id="cognomeAgg"
-                                        pattern="^[a-zA-Z0-9 ]+$" required> </div>
+                                        pattern="^[a-zA-Z ]+$" required> </div>
                             </div>
                             <div class="form-group row" id="dataAggField"> <label for="dataAgg"
                                     class="col-sm-3 col-form-label">Data</label>
@@ -228,15 +247,14 @@ if(isset($_POST["type"])){
                             <div class="form-check form-check-inline" id="sessoAggFieldF"> 
                                 <input class="form-check-input" type="radio" name="sessoAgg" id="sessoAggF" value="Femmina" required> 
                                     <label class="form-check-label" for="sessoAggF">Femmina</label> 
-                                </div>
+                            </div>
                             <div class="modal-footer"> <button type="submit" class="btn btn-primary ">Salva</button> 
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button> </div>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Chiudi</button> </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
 
     <div class="modal fade" id="ModalCerca" role="dialog">
@@ -296,31 +314,11 @@ if(isset($_POST["type"])){
 
 
     </div class="row">
-    <div style="margin-left:74.5%; margin-right:5%">
-        <?php
-            if($logged === true){
-                echo <<<XML
-                        <form method="POST" action="">
-                            <input type="hidden" name="type" value="logout" /> 
-                            <button type="submit" class="btn btn-primary">Logout</button> 
-                        </form>
-                    XML;
-            }else {
-                echo <<<XML
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModalLogin">Login</button> 
-                XML;
-            }
-        ?>
-        
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModalAggiungi" onclick="reset('registrati');">Registrati</button> 
-    </div>
-
-
     <?php 
         if($logged === true){
             // MOSTRO PRIMA PARTE
             echo <<<XML
-                <div class="row no-more-tables" style="min-height: 430px;">
+                <div class="row no-more-tables justify-content-center" style="min-height: 430px;">
                     <table class="table table-sm table-condensed cf">
                         <thead class="tableHeader">
                             <tr class="table-header">
@@ -368,40 +366,6 @@ if(isset($_POST["type"])){
                     persone.push(new Persona("$nome", "$cognome", "$dateToAddToClass", "$reddito", "$sesso", $id));
                     //addRecordToScreen($id, $nome, $cognome, $dateToAddToClass, $reddito, $sesso);
                  </script>
-                 <tr class="$id">
-                    <td class='editable-field nome'>
-                        $nome
-                    </td>
-                    <td class='editable-field cognome'>
-                        $cognome
-                        </td>
-                    <td class='editable-data'>
-                        $data
-                    </td>
-                    <td class='editable-reddito'>
-                        $redditoToShow
-                    </td>
-                    <td class='editable-sesso'>
-                        $sesso
-                    </td>
-                    <td class="text-right dropdown $id">
-                        <img class="VerticalOptions" src="img/VerticalOptions.png" data-toggle="dropdown" onclick="setIdTmp($id); reset();">
-                            <ul class="dropdown-menu dropdown-menu dropdown-menu-right">
-                                <li class="">
-                                    <a data-toggle="modal" data-target="#ModalAggiungi">
-                                        Modifica
-                                    </a>
-                                </li>
-                                <li class="">
-                                    <a data-toggle="modal" onclick="copia()">
-                                        Copia
-                                    </a></li><li class="">
-                                <a data-toggle="modal" data-target="#ModalElimina" onclick="reset('rimuovi')">
-                                    Elimina
-                                </a>
-                            </li>
-                        </ul>
-                    </td>
                 XML;
            
             }
@@ -411,26 +375,32 @@ if(isset($_POST["type"])){
                 </tbody>
                     </table>
                 </div>
+                <div class="row">
+                    <div class="btn-toolbar justify-content-center" id="toolbar" role="toolbar"
+                        aria-label="Toolbar with button groups">
+                        <div class="btn-group" role="group" aria-label="First group"> 
+                            <button type="button" onclick="primaPagina()" id="primaPagina" class="btn btn-primary"><i class="fas fa-angle-double-left"></i></button>
+                            <button type="button" onclick="paginaPrecedente()" id="paginaPrecedente" class="btn btn-primary"><i class="fas fa-angle-left"></i></button>
+                            <button type="button" class="btn btn-primary" id="pageCount"><b>1</b></button>
+                            <button type="button" onclick="paginaSeguente()" id="paginaSeguente" class="btn btn-primary"><i class="fas fa-angle-right"></i></button>
+                            <button type="button" onclick="ultimaPagina()" id="ultimaPagina" class="btn btn-primary"><i class="fas fa-angle-double-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <script> showAll("az") </script>
                 XML;
+        }else {
+            echo <<<XML
+                <style>
+                    body {background-image: url("img/punto.png"); background-repeat: no-repeat; background-size: cover;}
+                    .container-fluid {background-color : transparent}
+                </style>
+            XML;
         }
     
     ?>
-    </div>
-    <div class="row">
-        <div class="btn-toolbar justify-content-center" id="toolbar" role="toolbar"
-            aria-label="Toolbar with button groups">
-            <div class="btn-group" role="group" aria-label="First group"> <button type="button" onclick="primaPagina()"
-                    id="primaPagina" class="btn btn-primary" style="visibility: hidden"><i
-                        class="fas fa-angle-double-left"></i></button> <button type="button"
-                    onclick="paginaPrecedente()" id="paginaPrecedente" class="btn btn-primary"
-                    style="visibility: hidden"><i class="fas fa-angle-left"></i></button> <button type="button"
-                    class="btn btn-primary" id="pageCount" style="visibility: hidden"><b>1</b></button> <button
-                    type="button" onclick="paginaSeguente()" id="paginaSeguente" class="btn btn-primary"
-                    style="visibility: hidden"><i class="fas fa-angle-right"></i></button> <button type="button"
-                    onclick="ultimaPagina()" id="ultimaPagina" class="btn btn-primary" style="visibility: hidden"><i
-                        class="fas fa-angle-double-right"></i></button> </div>
-        </div>
-    </div>
+
+
     <div class="modal fade" id="ModalElimina" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">

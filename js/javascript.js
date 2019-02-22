@@ -28,6 +28,17 @@ class Persona {
                 return "più di 20.000 €";
         }
     }
+
+    convertValoreToReddito(valore) {
+        switch (valore) {
+            case "meno di 10.000 €":
+                return "basso";
+            case "da 10.000 a 20.000 €":
+                return "medio";
+            case "più di 20.000 €":
+                return "alto";
+        }
+    }
 }
 
 var persone = [];
@@ -41,15 +52,185 @@ var idTmp = 0;
 
 var elementForPage = 10;
 var currentPage = 0;
-/*
-persone.push(new Persona("Gianmaria", "Rovelli", "2001-06-02", "basso", "Maschio", persone.length));
-addRecordToScreen(persone.length - 1, "Gianmaria", "Rovelli", "2001-06-02", "basso", "Maschio");
-persone.push(new Persona("Federica", "Gatti", "2007-02-08", "medio", "Femmina", persone.length));
-addRecordToScreen(persone.length - 1, "Federica", "Gatti", "2001-06-02", "medio", "Femmina");
-showAll("az");
-*/
 
-$(document).ready(function() {
+
+function activeOrDisableField(me) {
+    $(me).prop("readonly", false);
+    $(me).focusout(function (event) {
+        event.stopPropagation();
+        var idInClass = Number($(me).parent().parent().prop("class"));
+        var className = $(me).parent().prop("class").split(" ")[0];
+        let personaDaMod = persone.find(o => o.id === idInClass);
+        var modified = false;
+        console.log(personaDaMod.cognome + " - " + $(me).val())
+
+        if (className == "nome") {
+            $(me).parent().html(`<input type="text" pattern="^[a-zA-Z ]+$" class="form-control editable" style="text-align:center; background-color:transparent; border: none; " onclick="activeOrDisableField(this)" value="${$(me).val()}" readonly></input>`);
+            
+            if(personaDaMod.nome != $(me).val())
+                modified = true;
+        } else if (className == "cognome") {
+
+            $(me).parent().html(`<input type="text" pattern="^[a-zA-Z ]+$" class="form-control editable" style="text-align:center; background-color:transparent; border: none; " onclick="activeOrDisableField(this)" value="${$(me).val()}" readonly ></input>`);
+            if(personaDaMod.cognome != $(me).val())
+                modified = true;
+        } else if (className == "data" ) {
+
+            $(me).html(`
+                <input type="date" class="form-control editable dateEditable" onclick="activeOrDisableField(this)" style="text-align:center; background-color:transparent; border: none" value="${$(me).val()}" readonly > 
+            `)
+
+            if(personaDaMod.data != $(me).val())
+                modified = true;
+        } else if (className == "reddito") {
+
+            var selectRedditoBasso = "";
+            var selectRedditoMedio = "";
+            var selectRedditoAlto = "";
+            if ($(me).val() === "basso") selectRedditoBasso = "selected";
+            if ($(me).val() === "medio") selectRedditoMedio = "selected";
+            if ($(me).val() === "alto") selectRedditoAlto = "selected";
+
+            $(me).html(`
+                <select class="form-control editable redditoSelect" onclick="activeOrDisableField(this)" style="text-align:center; background-color:transparent; border: none; ">
+                    <option value="basso" ${selectRedditoBasso}>meno di 10.000 €</option>
+                    <option value="medio" ${selectRedditoMedio}>da 10.000 a 20.000 €</option>
+                    <option value="alto" ${selectRedditoAlto}>pi&ugrave; di 20.000 €</option>
+                </select> 
+            `)
+
+            if(personaDaMod.reddito != $(me).val())
+                modified = true;
+        } else if (className == "sesso" ) {
+
+            var sessoM = "";
+            var sessoF = "";
+            if ($(me).val().toUpperCase() == "MASCHIO") sessoM = "selected";
+            if ($(me).val().toUpperCase() == "FEMMINA") sessoF = "selected";
+
+            $(me).html(`
+                <select class="form-control editable sessoSelect" onclick="activeOrDisableField(this)" style="text-align-last:center; background-color:transparent; border: none; ">
+                    <option value="Maschio" ${sessoM}>Maschio</option>
+                    <option value="Femmina" ${sessoF}>Femmina</option>
+                </select> 
+            `)
+            if(personaDaMod.sesso != $(me).val())
+                modified = true;
+        }
+
+        if (modified) {
+            if ($("." + idInClass).parent().children().last().html().includes("dropdown"))
+                $("." + idInClass).parent().children().last().html('<div class="optionBtn"><i style="display:inline; margin-right:5px" class="' + idInClass + ' save-modify-inline fas fa-check"></i><i  style="display:inline" class="' + idInClass + ' cancel-modify-inline far fa-times-circle"></i></div>')
+        }
+        $(me).prop("readonly", true);
+    })
+
+    $(me).keypress(function (event) {
+        event.stopPropagation();
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if (keycode == '13' || keycode == '16') {
+            $(me).blur();
+        }
+    });
+}
+
+$(document).on("click", ".save-modify-inline", function (event) {
+    event.stopPropagation();
+    var idInClass = Number($(this).prop("class").split(" ")[0]);
+    let personaDaMod = persone.find(o => o.id === idInClass);
+    var id = persone.indexOf(personaDaMod);
+    var pattern = $($(this).parent().parent().parent().find(".nome").html()).prop("pattern");
+    console.log(pattern);
+    if (new RegExp(pattern).test($($(this).parent().parent().parent().find(".nome").html()).val()) && new RegExp(pattern).test($($(this).parent().parent().parent().find(".cognome").html()).val())) {
+        var nome = $($(this).parent().parent().parent().find(".nome").html()).val()
+        var cognome = $($(this).parent().parent().parent().find(".cognome").html()).val()
+        var sesso = $($(this).parent().parent().parent().find(".sesso").html()).val();
+        var data = $($(this).parent().parent().parent().find(".data").html()).val()
+        var reddito = $($(this).parent().parent().parent().find(".reddito").html()).val()
+        persone[id].nome = nome;
+        persone[id].cognome = cognome;
+        persone[id].sesso = sesso;
+        persone[id].data = data;
+        persone[id].reddito = (reddito);
+        setIdTmp(idInClass);
+        reset("modifica");
+        $("#formAggiungi").submit();
+    } else {
+        if (!new RegExp(pattern).test($($(this).parent().parent().parent().find(".nome").html()).val())) {
+            var newBorderColorNome = $(this).parent().parent().parent().find(".nome").html().replace("border: none", "border: 1px solid red");
+            $(this).parent().parent().parent().find(".nome").html(newBorderColorNome);
+        }else {
+            var newBorderColorNome = $(this).parent().parent().parent().find(".nome").html().replace("border: 1px solid red", "border: none");
+            $(this).parent().parent().parent().find(".nome").html(newBorderColorNome);
+        }
+        if (!new RegExp(pattern).test($($(this).parent().parent().parent().find(".cognome").html()).val())) {
+            var newBorderColorCognome = $(this).parent().parent().parent().find(".cognome").html().replace("border: none", "border: 1px solid red");
+            $(this).parent().parent().parent().find(".cognome").html(newBorderColorCognome);
+        }else {
+            var newBorderColorCognome = $(this).parent().parent().parent().find(".cognome").html().replace("border: 1px solid red", "border: none");
+            $(this).parent().parent().parent().find(".cognome").html(newBorderColorCognome);
+        }
+    }
+
+})
+
+$(document).on("click", ".cancel-modify-inline", function (event) {
+    event.stopPropagation();
+    showAll("az");
+})
+
+
+
+$(document).on('change', '.redditoSelect', function () {
+    var selectRedditoBasso = "";
+    var selectRedditoMedio = "";
+    var selectRedditoAlto = "";
+    if ($(this).val() === "basso") selectRedditoBasso = "selected";
+    if ($(this).val() === "medio") selectRedditoMedio = "selected";
+    if ($(this).val() === "alto") selectRedditoAlto = "selected";
+    $(this).parent().html(`
+        <select class="form-control editable redditoSelect" onclick="activeOrDisableField(this)" style="text-align:center; background-color:transparent; border: none; ">
+            <option value="basso" ${selectRedditoBasso}>meno di 10.000 €</option>
+            <option value="medio" ${selectRedditoMedio}>da 10.000 a 20.000 €</option>
+            <option value="alto" ${selectRedditoAlto}>pi&ugrave; di 20.000 €</option>
+        </select> 
+    `)
+    console.log($(this).val());
+})
+
+$(document).on('change', '.dateEditable', function () {
+    var idInClass = Number($(this).parent().parent().prop("class"));
+    var className = $(this).parent().prop("class").split(" ")[0];
+    let personaDaMod = persone.find(o => o.id === idInClass);
+    var modified = false;
+    console.log(idInClass)
+    if (personaDaMod.data != $(this).val()) {
+        $(this).parent().parent().children().last().html('<div class="optionBtn"><i style="display:inline; margin-right:5px" class="' + idInClass + ' save-modify-inline fas fa-check"></i><i  style="display:inline" class="' + idInClass + ' cancel-modify-inline far fa-times-circle"></i></div>')
+    }
+    $(this).parent().html(`
+        <input type="date" class="form-control editable dateEditable" onclick="activeOrDisableField(this)" style="text-align:center; background-color:transparent; border: none" value="${$(this).val()}" readonly > 
+    `);
+})
+
+$(document).on('change', '.sessoSelect', function () {
+
+    var sessoM = "";
+    var sessoF = "";
+    if ($(this).val().toUpperCase() == "MASCHIO") sessoM = "selected";
+    if ($(this).val().toUpperCase() == "FEMMINA") sessoF = "selected";
+
+    $(this).html(`
+        <select class="form-control editable sessoSelect" style="text-align-last:center; background-color:transparent; border: none; ">
+            <option value="Maschio" ${sessoM}>Maschio</option>
+            <option value="Femmina" ${sessoF}>Femmina</option>
+        </select> 
+    `)
+
+    console.log($(this).val());
+})
+
+
+$(document).ready(function () {
 
     $("#nomeCheckBox").change(function () {
         if (this.checked) {
@@ -60,9 +241,9 @@ $(document).ready(function() {
             $("#nomeCerca").removeAttr('required');
         }
     });
-    
+
     $("#cognomeCheckBox").change(function () {
-    
+
         if (this.checked) {
             $("#cognomeCerca").prop('readonly', false);
             $("#cognomeCerca").prop('required', true);
@@ -71,9 +252,9 @@ $(document).ready(function() {
             $("#cognomeCerca").removeAttr('required');
         }
     });
-    
+
     $("#dataCheckBox").change(function () {
-    
+
         if (this.checked) {
             $("#dataCerca").prop('readonly', false);
             $("#dataCerca").prop('required', true);
@@ -82,9 +263,9 @@ $(document).ready(function() {
             $("#dataCerca").removeAttr('required');
         }
     });
-    
+
     $("#redditoCheckBox").change(function () {
-    
+
         if (this.checked) {
             $("#redditoCerca").removeAttr('disabled');
         } else {
@@ -116,22 +297,24 @@ function paginaSeguente() {
 
 function paginaPrecedente() {
 
-    currentPage = currentPage - 1;
-    $("#pageCount").text(currentPage + 1);
-    showAll("az");
+    if (currentPage > 0) {
+        currentPage = currentPage - 1;
+        $("#pageCount").text(currentPage + 1);
+        showAll("az");
 
-    if (currentPage == 0) {
-        $("#paginaPrecedente").css("visibility", "hidden")
-        $("#primaPagina").css("visibility", "hidden");
-    } else {
-        $("#paginaPrecedente").css("visibility", "visible")
-        $("#primaPagina").css("visibility", "visible");
-    }
+        if (currentPage == 0) {
+            $("#paginaPrecedente").css("visibility", "hidden")
+            $("#primaPagina").css("visibility", "hidden");
+        } else {
+            $("#paginaPrecedente").css("visibility", "visible")
+            $("#primaPagina").css("visibility", "visible");
+        }
 
-    var maxPage = Math.round((persone.length / elementForPage + 0.5) - 1);
-    if (currentPage < maxPage) {
-        $("#paginaSeguente").css("visibility", "visible")
-        $("#ultimaPagina").css("visibility", "visible");
+        var maxPage = Math.round((persone.length / elementForPage + 0.5) - 1);
+        if (currentPage < maxPage) {
+            $("#paginaSeguente").css("visibility", "visible")
+            $("#ultimaPagina").css("visibility", "visible");
+        }
     }
 }
 
@@ -194,7 +377,7 @@ function reset(what) {
 
         $("#nomeAgg").prop("required", true);
         $("#cognomeAgg").prop("required", true);
-    } else if(what == "rimuovi"){
+    } else if (what == "rimuovi") {
         let personaDaMod = persone.find(o => o.id === idTmp);
         $("#idPersonaRemovePerson").val(personaDaMod.id)
     } else if (what == "cerca") {
@@ -247,10 +430,10 @@ function reset(what) {
         $("#dataAgg").val(personaDaMod.data);
         $("#redditoAgg").val(personaDaMod.reddito);
 
-        if(personaDaMod.sesso ===  $("#sessoAggF").val()){
+        if (personaDaMod.sesso === $("#sessoAggF").val()) {
             $("#sessoAggF").prop("checked", true);
         }
-        if(personaDaMod.sesso ===  $("#sessoAggM").val()){
+        if (personaDaMod.sesso === $("#sessoAggM").val()) {
             $("#sessoAggM").prop("checked", true);
         }
     }
@@ -378,129 +561,55 @@ function aggiungiPersona() {
 
     var id = persone.length;
     persone.push(new Persona(nome, cognome, (data), reddito, sesso, id));
-
-    // var appenTo = "<tr class=\"" + id + "\"><td>" + nome + "</td><td>" + cognome + "</td><td>" + formattedDate(new Date(data)) + "</td><td>" + reddito + "</td><td>" + sesso + "</td>";
-
-    // appenTo += '<td class="text-right dropdown ' + id + '"><img class="VerticalOptions" src="img/VerticalOptions.png" data-toggle="dropdown" onclick="setIdTmp(' + id + '); reset();"><ul class="dropdown-menu dropdown-menu dropdown-menu-right"><li><a class="blue-back" data-toggle="modal" data-target="#ModalAggiungi">Modifica</a></li><li><a class="blue-back" data-toggle="modal" data-target="#ModalElimina">Elimina</a></li></ul></td>';
-
-    // $("#tabellaPersone").append(appenTo);
     addRecordToScreen(id, nome, cognome, data, reddito, sesso);
 }
 
 function addRecordToScreen(id, nome, cognome, data, reddito, sesso) {
 
     var index = persone.findIndex(e => e.id == id);
-    reddito = persone[index].convertRedditoToValore();
-    var appenTo = "<tr class=\"" + id + "\"><td class='editable-field nome'>" + nome + "</td><td class='editable-field cognome'>" + cognome + "</td><td class='editable-data'>" + formattedDate(new Date(data)) + "</td><td class='editable-reddito'>" + reddito + "</td><td class='editable-sesso'>" + sesso + "</td>";
 
-    appenTo += '<td class="text-right dropdown ' + id + '"><img class="VerticalOptions" src="img/VerticalOptions.png" data-toggle="dropdown" onclick="setIdTmp(' + id + '); reset();"><ul class="dropdown-menu dropdown-menu dropdown-menu-right"><li class=""><a data-toggle="modal" data-target="#ModalAggiungi">Modifica</a></li><li class=""><a data-toggle="modal" onclick="copia()">Copia</a></li><li class=""><a data-toggle="modal" data-target="#ModalElimina">Elimina</a></li></ul></td>';
+    var selectRedditoBasso = "";
+    var selectRedditoMedio = "";
+    var selectRedditoAlto = "";
+    if (reddito === "basso") selectRedditoBasso = "selected";
+    if (reddito === "medio") selectRedditoMedio = "selected";
+    if (reddito === "alto") selectRedditoAlto = "selected";
+
+    var sessoM = "";
+    var sessoF = "";
+    if (sesso.toUpperCase() == "MASCHIO") sessoM = "selected";
+    if (sesso.toUpperCase() == "FEMMINA") sessoF = "selected";
+
+    var appenTo = `
+        <tr class=${id}>
+            <td class='nome editableField'>
+                <input type="text" pattern="^[a-zA-Z ]+$" class="form-control editable" style="text-align:center; background-color:transparent; border: none; " onclick="activeOrDisableField(this)" value="${nome}" readonly > 
+            </td>
+            <td class='cognome editableField'>
+                <input type="text" pattern="^[a-zA-Z ]+$" class="form-control editable" style="text-align:center; background-color:transparent; border: none; " onclick="activeOrDisableField(this)" value="${cognome}" readonly > 
+            </td>
+            <td class='data editableField'>
+                <input type="date" class="form-control editable dateEditable" onclick="activeOrDisableField(this)" style="text-align:center; background-color:transparent; border: none" value="${data}" readonly > 
+            </td>
+            <td class='reddito editableField'>
+                <select class="form-control editable" onclick="activeOrDisableField(this)" style="text-align:center; background-color:transparent; border: none; ">
+                    <option value="basso" ${selectRedditoBasso}>meno di 10.000 €</option>
+                    <option value="medio" ${selectRedditoMedio}>da 10.000 a 20.000 €</option>
+                    <option value="alto" ${selectRedditoAlto}>pi&ugrave; di 20.000 €</option>
+                </select> 
+            </td>
+            <td class='sesso' >
+                <select class="form-control editable sessoSelect" onclick="activeOrDisableField(this)" style="text-align-last:center; background-color:transparent; border: none; ">
+                    <option value="Maschio" ${sessoM}>Maschio</option>
+                    <option value="Femmina" ${sessoF}>Femmina</option>
+                </select> 
+            </div>
+            </td>"
+    
+    `
+    appenTo += '<td class="text-right dropdown ' + id + '"><div class="optionBtn"><img class="VerticalOptions" src="img/VerticalOptions.png" data-toggle="dropdown" onclick="setIdTmp(' + id + '); reset();"><ul class="dropdown-menu dropdown-menu dropdown-menu-right"><li class=""><a data-toggle="modal" data-target="#ModalAggiungi">Modifica</a></li><li class=""><a data-toggle="modal" onclick="copia()">Copia</a></li><li class=""><a data-toggle="modal" data-target="#ModalElimina" onclick="reset(\'rimuovi\')">Elimina</a></li></ul></div></td>';
 
     $("#tabellaPersone").append(appenTo);
-
-    /*
-
-    $(".editable-field").click(function () {
-        var id = $(this).parent().prop("class");
-        var index = persone.findIndex(e => e.id == id);
-        var param = $(this).prop('class').split(' ')[1];
-        var width = $(this).width();
-        var testo;
-        if ($(this).html().indexOf("<br>") != -1 && $(this).html().indexOf("<br>") != 0) {
-            testo = $(this).html().substring(0, $(this).html().indexOf("<br>"));
-        } else {
-            testo = $(this).html();
-        }
-
-        if (testo == persone[index][param]) {
-            $(this).html("<input type='text' value='" + persone[index][param] + "'/>");
-        }
-        $(this).find($('input')).focusout({ index: index, param: param }, function () {
-            if ($(this).val() != "" && !(/[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>[0-9\]\/?]/).test($(this).val())) {
-                persone[index][param] = $(this).val();
-                $(this).parent().text(persone[index][param]);
-            } else {
-                $(this).parent().html(persone[index][param] + "<br><font size='2' color='red'>non valido</font>");
-            }
-        })
-
-    })
-
-    $(".editable-reddito").click(function () {
-        var id = $(this).parent().prop("class");
-        var index = persone.findIndex(e => e.id == id);
-        if ($(this).children().length == 0) {
-            $(this).html(`
-            <select>
-                <option value="basso">meno di 10.000 €</option>
-                <option value="medio">da 10.000 a 20.000 €</option>
-                <option value="alto">pi&ugrave; di 20.000 €</option>
-            </select>
-            `);
-            $(this).find($('select')).val(persone[index].reddito);
-            //$(this).css("width", "450px");
-        }
-
-        $(this).find($('select')).focusout({ index: index }, function () {
-            persone[index].reddito = $(this).val();
-            $(this).parent().text(persone[index].convertRedditoToValore());
-        })
-    })
-
-    $(".editable-sesso").click(function () {
-        var id = $(this).parent().prop("class");
-        var index = persone.findIndex(e => e.id == id);
-        if ($(this).children().length == 0) {
-            $(this).html(`
-            <select>
-                <option value="Maschio">Maschio</option>
-                <option value="Femmina">Femmina</option>
-            </select>
-            `);
-            $(this).find($('select')).val(persone[index].sesso);
-        }
-
-        $(this).find($('select')).focusout({ index: index }, function () {
-            persone[index].sesso = $(this).val();
-            $(this).parent().text(persone[index].sesso);
-        })
-    })
-
-    $(".editable-reddito").click(function () {
-        var id = $(this).parent().prop("class");
-        var index = persone.findIndex(e => e.id == id);
-        if ($(this).children().length == 0) {
-            $(this).html(`
-            <select>
-                <option value="basso">meno di 10.000 €</option>
-                <option value="medio">da 10.000 a 20.000 €</option>
-                <option value="alto">pi&ugrave; di 20.000 €</option>
-            </select>
-            `);
-            $(this).find($('select')).val(persone[index].reddito);
-        }
-
-        $(this).find($('select')).focusout({ index: index }, function () {
-            persone[index].reddito = $(this).val();
-            $(this).parent().text(persone[index].convertRedditoToValore());
-        })
-    })
-
-    $(".editable-data").click(function () {
-        var testo = $(this).text().split('-').reverse().join('-');
-        var id = $(this).parent().prop("class");
-        var index = persone.findIndex(e => e.id == id);
-        if (testo != "" && testo != undefined) {
-            $(this).html("<input type='date' value='" + testo + "'/>");
-            $(this).css("width", "20%");
-
-            $(this).find($('input')).focusout({ index: index }, function () {
-                persone[index].data = $(this).val();
-                $(this).parent().text(formattedDate(new Date(persone[index].data)));
-            })
-        }
-    })
-
-    */
 }
 
 function modificaPersona() {
@@ -571,9 +680,26 @@ function showAll(type) {
     }
 
     var maxPage = Math.round((persone.length / elementForPage + 0.4) - 1);
-    if (maxPage > 0)
+
+    if (currentPage == 0 && currentPage != maxPage) {
+        $("#paginaPrecedente").css("visibility", "hidden");
+        $("#primaPagina").css("visibility", "hidden");
+    } else {
+        $("#primaPagina").css("visibility", "hidden");
+        $("#ultimaPagina").css("visibility", "hidden");
+        $("#paginaPrecedente").css("visibility", "hidden");
+        $("#paginaSeguente").css("visibility", "hidden");
+        $("#pageCount").css("visibility", "hidden")
+    }
+
+    if (maxPage > 0) {
         $("#pageCount").css("visibility", "visible")
+    }
     else {
+        $("#primaPagina").css("visibility", "hidden");
+        $("#ultimaPagina").css("visibility", "hidden");
+        $("#paginaPrecedente").css("visibility", "hidden");
+        $("#paginaSeguente").css("visibility", "hidden");
         $("#pageCount").css("visibility", "hidden")
     }
 }
