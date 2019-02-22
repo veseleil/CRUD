@@ -20,7 +20,6 @@ button {
 body {
     height: 500px;
     background-color: #ededed;
-    overflow:hidden;
 }
 
 .VerticalOptions {
@@ -49,6 +48,10 @@ body {
     width: 100%;
     margin-top: 20px;
 
+}
+
+.divTable{
+    min-height: 565px;
 }
 
 

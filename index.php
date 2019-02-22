@@ -92,12 +92,11 @@ if(isset($_POST["type"])){
     } else if($type == "registrazione"){
         $email = $_POST["email"];
         $password = $_POST["password"];
-        $password  = md5($password);
 
         $sql = "INSERT INTO tbllogin VALUE(:email, :password)";
         $stmt = $conn->prepare($sql);
         $stmt->bindValue(':email', $email, PDO::PARAM_STR);
-        $stmt->bindValue(':password', $password, PDO::PARAM_STR);
+        $stmt->bindValue(':password', md5($password), PDO::PARAM_STR);
         $stmt->execute();
     }
 }
@@ -160,7 +159,7 @@ if(isset($_POST["type"])){
 
 
         
-            <div class="modal fade" id="ModalLogin" role="dialog">
+        <div class="modal fade" id="ModalLogin" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -191,6 +190,7 @@ if(isset($_POST["type"])){
                     </div>
                 </div>
             </div>
+        </div>
 
         <div class="modal fade" id="ModalAggiungi" role="dialog">
             <div class="modal-dialog">
@@ -310,10 +310,9 @@ if(isset($_POST["type"])){
                 </div>
             </div>
         </div>
-    </div>
-
-
-    </div class="row">
+        </div>
+    
+    <div class="divTable">
     <?php 
         if($logged === true){
             // MOSTRO PRIMA PARTE
@@ -372,9 +371,9 @@ if(isset($_POST["type"])){
 
             // CONCLUDE TABELLA
             echo <<<XML
-                </tbody>
+                        </tbody>
                     </table>
-                </div>
+                </div></div>
                 <div class="row">
                     <div class="btn-toolbar justify-content-center" id="toolbar" role="toolbar"
                         aria-label="Toolbar with button groups">
