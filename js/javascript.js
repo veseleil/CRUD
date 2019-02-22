@@ -66,21 +66,21 @@ function activeOrDisableField(me) {
 
         if (className == "nome") {
             $(me).parent().html(`<input type="text" pattern="^[a-zA-Z ]+$" class="form-control editable" style="text-align:center; background-color:transparent; border: none; " onclick="activeOrDisableField(this)" value="${$(me).val()}" readonly></input>`);
-            
-            if(personaDaMod.nome != $(me).val())
+
+            if (personaDaMod.nome != $(me).val())
                 modified = true;
         } else if (className == "cognome") {
 
             $(me).parent().html(`<input type="text" pattern="^[a-zA-Z ]+$" class="form-control editable" style="text-align:center; background-color:transparent; border: none; " onclick="activeOrDisableField(this)" value="${$(me).val()}" readonly ></input>`);
-            if(personaDaMod.cognome != $(me).val())
+            if (personaDaMod.cognome != $(me).val())
                 modified = true;
-        } else if (className == "data" ) {
+        } else if (className == "data") {
 
             $(me).html(`
                 <input type="date" class="form-control editable dateEditable" onclick="activeOrDisableField(this)" style="text-align:center; background-color:transparent; border: none" value="${$(me).val()}" readonly > 
             `)
 
-            if(personaDaMod.data != $(me).val())
+            if (personaDaMod.data != $(me).val())
                 modified = true;
         } else if (className == "reddito") {
 
@@ -99,9 +99,9 @@ function activeOrDisableField(me) {
                 </select> 
             `)
 
-            if(personaDaMod.reddito != $(me).val())
+            if (personaDaMod.reddito != $(me).val())
                 modified = true;
-        } else if (className == "sesso" ) {
+        } else if (className == "sesso") {
 
             var sessoM = "";
             var sessoF = "";
@@ -114,7 +114,7 @@ function activeOrDisableField(me) {
                     <option value="Femmina" ${sessoF}>Femmina</option>
                 </select> 
             `)
-            if(personaDaMod.sesso != $(me).val())
+            if (personaDaMod.sesso != $(me).val())
                 modified = true;
         }
 
@@ -159,14 +159,14 @@ $(document).on("click", ".save-modify-inline", function (event) {
         if (!new RegExp(pattern).test($($(this).parent().parent().parent().find(".nome").html()).val())) {
             var newBorderColorNome = $(this).parent().parent().parent().find(".nome").html().replace("border: none", "border: 1px solid red");
             $(this).parent().parent().parent().find(".nome").html(newBorderColorNome);
-        }else {
+        } else {
             var newBorderColorNome = $(this).parent().parent().parent().find(".nome").html().replace("border: 1px solid red", "border: none");
             $(this).parent().parent().parent().find(".nome").html(newBorderColorNome);
         }
         if (!new RegExp(pattern).test($($(this).parent().parent().parent().find(".cognome").html()).val())) {
             var newBorderColorCognome = $(this).parent().parent().parent().find(".cognome").html().replace("border: none", "border: 1px solid red");
             $(this).parent().parent().parent().find(".cognome").html(newBorderColorCognome);
-        }else {
+        } else {
             var newBorderColorCognome = $(this).parent().parent().parent().find(".cognome").html().replace("border: 1px solid red", "border: none");
             $(this).parent().parent().parent().find(".cognome").html(newBorderColorCognome);
         }
@@ -454,11 +454,31 @@ function salva() {
 function copia() {
     var redditoToShow = 0;
     var numeroCopie = 1;
+    let personaDaMod = persone.find(o => o.id === idTmp);
+    $("#typeOfSubmit").val("aggiungi");
+    $("#emailAggField").hide();
+    $("#passwordAggField").hide();
+    $("#idPersona").val(personaDaMod.id);
+
+    $("#nomeAgg").val(personaDaMod.nome);
+    $("#cognomeAgg").val(personaDaMod.cognome);
+    $("#dataAgg").val(personaDaMod.data);
+    $("#redditoAgg").val(personaDaMod.reddito);
+
+    if (personaDaMod.sesso === $("#sessoAggF").val()) {
+        $("#sessoAggF").prop("checked", true);
+    }
+    if (personaDaMod.sesso === $("#sessoAggM").val()) {
+        $("#sessoAggM").prop("checked", true);
+    }
+    $("#formAggiungi").submit();
+    /*
     for (var i = 0; i < numeroCopie; i++) {
-        
+
         persone.push(new Persona(persone[idTmp].nome, persone[idTmp].cognome, persone[idTmp].data, persone[idTmp].reddito, persone[idTmp].sesso, persone.length));
         addRecordToScreen(persone.length - 1, persone[idTmp].nome, persone[idTmp].cognome, persone[idTmp].data, persone[idTmp].reddito, persone[idTmp].sesso);
     }
+    */
 
     var maxPage = Math.round((persone.length / elementForPage + 0.5) - 1);
     if (maxPage + 1 > 1) {
@@ -608,7 +628,7 @@ function addRecordToScreen(id, nome, cognome, data, reddito, sesso) {
             </td>"
     
     `
-    appenTo += '<td class="text-right dropdown ' + id + '"><div class="optionBtn"><img class="VerticalOptions" src="img/VerticalOptions.png" data-toggle="dropdown" onclick="setIdTmp(' + id + '); reset();"><ul class="dropdown-menu dropdown-menu dropdown-menu-right"><li class=""><a data-toggle="modal" data-target="#ModalAggiungi">Modifica</a></li><li class=""><a data-toggle="modal" data-target="#ModalElimina" onclick="reset(\'rimuovi\')">Elimina</a></li></ul></div></td>';
+    appenTo += '<td class="text-right dropdown ' + id + '"><div class="optionBtn"><img class="VerticalOptions" src="img/VerticalOptions.png" data-toggle="dropdown" onclick="setIdTmp(' + id + '); reset();"><ul class="dropdown-menu dropdown-menu dropdown-menu-right"><li class=""><a data-toggle="modal" data-target="#ModalAggiungi">Modifica</a></li><li class=""><a data-toggle="modal" onclick="copia()">Copia</a></li><li class=""><a data-toggle="modal" data-target="#ModalElimina" onclick="reset(\'rimuovi\')">Elimina</a></li></ul></div></td>';
 
     $("#tabellaPersone").append(appenTo);
 }
